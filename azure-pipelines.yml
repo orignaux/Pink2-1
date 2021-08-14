@@ -37,7 +37,7 @@ jobs:
 
 - job: init_macos
   pool:
-    vmImage: 'macOS-10.13'
+    vmImage: 'macOS-10.14'
     cancelTimeoutInMinutes: 1
   condition: and(ne(variables['Agent.JobStatus'], 'Canceled'), ne(variables['Agent.JobStatus'], 'Failed'))
   steps:
