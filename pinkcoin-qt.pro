@@ -39,11 +39,11 @@ macx {
                          src/qt/macnotificationhandler.mm
     LIBS += -framework Foundation -framework ApplicationServices -framework AppKit
 
-    # OSX 10.6 was the last to support 32-bit, so we target 10.7 and up
+    # OSX 10.6 was the last to support 32-bit, so we target 10.14 and up
     DEFINES += IS_ARCH_64 MAC_OSX MSG_NOSIGNAL=0
-    QMAKE_CXXFLAGS += -pthread -mmacosx-version-min=10.7 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
-    QMAKE_CFLAGS += -pthread -mmacosx-version-min=10.7 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
-    QMAKE_OBJECTIVE_CFLAGS += -mmacosx-version-min=10.7 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
+    QMAKE_CXXFLAGS += -pthread -mmacosx-version-min=10.14 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
+    QMAKE_CFLAGS += -pthread -mmacosx-version-min=10.14 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
+    QMAKE_OBJECTIVE_CFLAGS += -mmacosx-version-min=10.14 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
     QMAKE_LFLAGS_THREAD += -pthread
 }
 
