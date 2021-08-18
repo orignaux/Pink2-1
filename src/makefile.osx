@@ -132,7 +132,7 @@ version.cpp: obj/build.h
 DEFS += -DHAVE_BUILD_INFO
 
 obj/%.o: %.cpp
-	$(CXX) -c $(CFLAGS) -MMD -MF $(@:%.o=%.d) -Wc++11-extensions -fvisibility=hidden -fvisibility-inlines-hidden -o $@ $<
+	$(CXX) -c $(CFLAGS) -MMD -MF $(@:%.o=%.d) -Wc++11-extensions -Wc++11-long-long -fvisibility=hidden -fvisibility-inlines-hidden -o $@ $<
 	@cp $(@:%.o=%.d) $(@:%.o=%.P); \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 	      -e '/^$$/ d' -e 's/$$/ :/' < $(@:%.o=%.d) >> $(@:%.o=%.P); \
@@ -145,7 +145,7 @@ obj/scrypt-x86_64.o: scrypt-x86_64.S
 	$(CXX) -c $(xCXXFLAGS) -MMD -o $@ $<
 
 pink2d: $(OBJS:obj/%=obj/%)
-	$(CXX) $(CFLAGS) -Wc++11-extensions -fvisibility=hidden -fvisibility-inlines-hidden -o $@ $(LIBPATHS) $^ $(LIBS)
+	$(CXX) $(CFLAGS) -Wc++11-extensions -Wc++11-long-long -fvisibility=hidden -fvisibility-inlines-hidden -o $@ $(LIBPATHS) $^ $(LIBS)
 
 clean:
 	-rm -f pink2d
