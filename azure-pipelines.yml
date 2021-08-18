@@ -37,7 +37,7 @@ jobs:
 
 - job: init_macos
   pool:
-    vmImage: 'macOS-10.14'
+    vmImage: 'macOS-10.15'
     cancelTimeoutInMinutes: 1
   condition: and(ne(variables['Agent.JobStatus'], 'Canceled'), ne(variables['Agent.JobStatus'], 'Failed'))
   steps:
@@ -90,7 +90,7 @@ jobs:
 
 - job: build_pinkcoin_binaries_for_macos
   pool:
-    vmImage: 'macOS-10.14'
+    vmImage: 'macOS-10.15'
     cancelTimeoutInMinutes: 1
   dependsOn:
     - init_macos
