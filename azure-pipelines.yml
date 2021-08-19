@@ -53,30 +53,30 @@ jobs:
     displayName: 'Set toolkit build id for check'
 
   # Tries to donwload toolkit.
-  - template: .azure/macos/install-toolkit.yml
-    parameters:
-      buildId: $(toolkitBuildId)
-      artifactName: $(macos.toolkit.name)
+  # - template: .azure/macos/install-toolkit.yml
+  #   parameters:
+  #     buildId: $(toolkitBuildId)
+  #     artifactName: $(macos.toolkit.name)
   
-  - bash: |
-      cd $(Build.BinariesDirectory)
-      ls -la .
-      if [ -d $MACOS_TOOLKIT_NAME ]; then
-        echo '##vso[task.setvariable variable=toolkitExists]true'
-        echo '##vso[task.setvariable variable=toolkitExists;isOutput=true]true'
-      else
-        echo '##vso[task.setvariable variable=toolkitExists]false'
-        echo '##vso[task.setvariable variable=toolkitExists;isOutput=true]false'
-      fi
-    displayName: 'Check toolkit existance'
-    name: check
+  # - bash: |
+  #     cd $(Build.BinariesDirectory)
+  #     ls -la .
+  #     if [ -d $MACOS_TOOLKIT_NAME ]; then
+  #       echo '##vso[task.setvariable variable=toolkitExists]true'
+  #       echo '##vso[task.setvariable variable=toolkitExists;isOutput=true]true'
+  #     else
+  #       echo '##vso[task.setvariable variable=toolkitExists]false'
+  #       echo '##vso[task.setvariable variable=toolkitExists;isOutput=true]false'
+  #     fi
+  #   displayName: 'Check toolkit existance'
+  #   name: check
   
-  - task: PublishBuildArtifacts@1
-    displayName: 'Republish toolkit'
-    inputs:
-      pathtoPublish: '$(Build.BinariesDirectory)/$(macos.toolkit.name)/toolkit.tar.gz'
-      artifactName: $(macos.toolkit.name)
-    condition: eq(variables.toolkitExists, 'true')
+  # - task: PublishBuildArtifacts@1
+  #   displayName: 'Republish toolkit'
+  #   inputs:
+  #     pathtoPublish: '$(Build.BinariesDirectory)/$(macos.toolkit.name)/toolkit.tar.gz'
+  #     artifactName: $(macos.toolkit.name)
+  #   condition: eq(variables.toolkitExists, 'true')
 
 # --------------------------------------------------------------------------------------------------
 
