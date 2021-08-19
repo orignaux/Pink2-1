@@ -80,11 +80,11 @@ jobs:
 
 # --------------------------------------------------------------------------------------------------
 
-# - template: .azure/macos/build-toolkit.yml
-#   parameters:
-#     path: $(macos.path)
-#     job1: build_macos_toolkit_1
-#     condition: eq(dependencies.init_macos.outputs['check.toolkitExists'], 'false')
+- template: .azure/macos/build-toolkit.yml
+  parameters:
+    path: $(macos.path)
+    job1: build_macos_toolkit_1
+    condition: eq(dependencies.init_macos.outputs['check.toolkitExists'], 'false')
 
 # --------------------------------------------------------------------------------------------------
 
