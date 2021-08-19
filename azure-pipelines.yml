@@ -52,7 +52,7 @@ jobs:
       echo 'Toolkit build id set to '$id
     displayName: 'Set toolkit build id for check'
 
-  Tries to donwload toolkit.
+  # Tries to donwload toolkit.
   - template: .azure/macos/install-toolkit.yml
     parameters:
       buildId: $(toolkitBuildId)
