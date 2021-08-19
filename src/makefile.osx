@@ -12,12 +12,18 @@ DEPSDIR=/opt/local
 INCLUDEPATHS= \
  -I"$(CURDIR)" \
  -I"$(CURDIR)"/obj \
- -I"$(DEPSDIR)/include" \
- -I"$(DEPSDIR)/include/db48"
+ -I/usr/local/Cellar/miniupnpc/2.2.2/include/ \
+ -I/usr/local/Cellar/berkeley-db@4/4.8.30/include/ \
+ -I/usr/local/Cellar/boost/1.76.0/include/ \
+ -I/usr/local/Cellar/openssl@1.1/1.1.1k/include/ \
+ -I/usr/local/Cellar/zlib/1.2.11/include/
 
 LIBPATHS= \
- -L"$(DEPSDIR)/lib" \
- -L"$(DEPSDIR)/lib/db48"
+ -L/usr/local/Cellar/miniupnpc/2.2.2/lib/ \
+ -L/usr/local/Cellar/berkeley-db@4/4.8.30/lib/ \
+ -L/usr/local/Cellar/boost/1.76.0/lib/ \
+ -L/usr/local/Cellar/openssl@1.1/1.1.1k/lib/ \
+ -L/usr/local/Cellar/zlib/1.2.11/lib/
 
 USE_UPNP:=1
 
@@ -26,15 +32,16 @@ LIBS= -dead_strip
 ifdef STATIC
 # Build STATIC if you are redistributing the pink2d binary
 LIBS += \
- $(DEPSDIR)/lib/db48/libdb_cxx-4.8.a \
- $(DEPSDIR)/lib/libboost_system-mt.a \
- $(DEPSDIR)/lib/libboost_filesystem-mt.a \
- $(DEPSDIR)/lib/libboost_program_options-mt.a \
- $(DEPSDIR)/lib/libboost_thread-mt.a \
- $(DEPSDIR)/lib/libboost_chrono-mt.a \
- $(DEPSDIR)/lib/libssl.a \
- $(DEPSDIR)/lib/libcrypto.a \
- $(DEPSDIR)/lib/libz.a
+ /usr/local/Cellar/miniupnpc/2.2.2/lib/libminiupnpc.a \
+ /usr/local/Cellar/berkeley-db@4/4.8.30/lib/libdb_cxx-4.8.a \
+ /usr/local/Cellar/boost/1.76.0/lib/libboost_system-mt.a \
+ /usr/local/Cellar/boost/1.76.0/lib/libboost_filesystem-mt.a \
+ /usr/local/Cellar/boost/1.76.0/lib/libboost_program_options-mt.a \
+ /usr/local/Cellar/boost/1.76.0/lib/libboost_thread-mt.a \
+ /usr/local/Cellar/boost/1.76.0/lib/libboost_chrono-mt.a \
+ /usr/local/Cellar/openssl@1.1/1.1.1k/lib/libssl.a \
+ /usr/local/Cellar/openssl@1.1/1.1.1k/lib/libcrypto.a \
+ /usr/local/Cellar/zlib/1.2.11/lib/libz.a
 else
 LIBS += \
  -ldb_cxx-4.8 \
@@ -49,14 +56,14 @@ endif
 
 DEFS=-DMAC_OSX -DMSG_NOSIGNAL=0 -DBOOST_SPIRIT_THREADSAFE
 
-ifdef RELEASE
+# ifdef RELEASE
 # Compile for maximum compatibility and smallest size.
 # This requires that dependencies are compiled
 # the same way.
-CFLAGS = -mmacosx-version-min=10.15 -arch x86_64 -O3 -msse2
-else
-CFLAGS = -g -msse2
-endif
+CFLAGS = -mmacosx-version-min=11.0 -arch x86_64 -O3 -msse2
+# else
+# CFLAGS = -g -msse2
+# endif
 
 # ppc doesn't work because we don't support big-endian
 CFLAGS += -Wall -Wextra -Wformat -Wformat-security -Wno-unused-parameter \
@@ -87,7 +94,7 @@ OBJS= \
     obj/rpcrawtransaction.o \
     obj/rpcsmessage.o \
     obj/script.o \
-	obj/stakedb.o \
+    obj/stakedb.o \
     obj/sync.o \
     obj/util.o \
     obj/wallet.o \
@@ -102,14 +109,14 @@ OBJS= \
     obj/stealth.o 
 
 ifndef USE_UPNP
-	override USE_UPNP = -
+  override USE_UPNP = -
 endif
 ifneq (${USE_UPNP}, -)
-	DEFS += -DUSE_UPNP=$(USE_UPNP)
+  DEFS += -DUSE_UPNP=$(USE_UPNP)
 ifdef STATIC
-	LIBS += $(DEPSDIR)/lib/libminiupnpc.a
+  LIBS +=  /usr/local/Cellar/miniupnpc/2.2.2/lib/libminiupnpc.a
 else
-	LIBS += -lminiupnpc
+  LIBS += -lminiupnpc
 endif
 endif
 
@@ -120,37 +127,37 @@ DEFS += $(addprefix -I,$(CURDIR)/leveldb/include)
 DEFS += $(addprefix -I,$(CURDIR)/leveldb/helpers)
 OBJS += obj/txdb-leveldb.o
 leveldb/libleveldb.a:
-	@echo "Building LevelDB ..." && cd leveldb && $(MAKE) CC=$(CC) CXX=$(CXX) OPT="$(CFLAGS)" libleveldb.a libmemenv.a && cd ..
+  @echo "Building LevelDB ..." && cd leveldb && $(MAKE) CC=$(CC) CXX=$(CXX) OPT="$(CFLAGS)" libleveldb.a libmemenv.a && cd ..
 obj/txdb-leveldb.o: leveldb/libleveldb.a
 
 # auto-generated dependencies:
 -include obj/*.P
 
 obj/build.h: FORCE
-	/bin/sh ../share/genbuild.sh obj/build.h
+  /bin/sh ../share/genbuild.sh obj/build.h
 version.cpp: obj/build.h
 DEFS += -DHAVE_BUILD_INFO
 
 obj/%.o: %.cpp
-	$(CXX) -c $(CFLAGS) -MMD -MF $(@:%.o=%.d) -Wc++11-extensions -Wc++11-long-long -fvisibility=hidden -fvisibility-inlines-hidden -o $@ $<
-	@cp $(@:%.o=%.d) $(@:%.o=%.P); \
-	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
-	      -e '/^$$/ d' -e 's/$$/ :/' < $(@:%.o=%.d) >> $(@:%.o=%.P); \
-	  rm -f $(@:%.o=%.d)
+  $(CXX) -c $(CFLAGS) -MMD -MF $(@:%.o=%.d) -Wc++11-extensions -fvisibility=hidden -fvisibility-inlines-hidden -o $@ $<
+  @cp $(@:%.o=%.d) $(@:%.o=%.P); \
+    sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
+        -e '/^$$/ d' -e 's/$$/ :/' < $(@:%.o=%.d) >> $(@:%.o=%.P); \
+    rm -f $(@:%.o=%.d)
 
 obj/scrypt-x86.o: scrypt-x86.S
-	$(CXX) -c $(xCXXFLAGS) -MMD -o $@ $<
+  $(CXX) -c $(xCXXFLAGS) -MMD -o $@ $<
 
 obj/scrypt-x86_64.o: scrypt-x86_64.S
-	$(CXX) -c $(xCXXFLAGS) -MMD -o $@ $<
+  $(CXX) -c $(xCXXFLAGS) -MMD -o $@ $<
 
 pink2d: $(OBJS:obj/%=obj/%)
-	$(CXX) $(CFLAGS) -Wc++11-extensions -Wc++11-long-long -fvisibility=hidden -fvisibility-inlines-hidden -o $@ $(LIBPATHS) $^ $(LIBS)
+  $(CXX) $(CFLAGS) -Wc++11-extensions -fvisibility=hidden -fvisibility-inlines-hidden -o $@ $(LIBPATHS) $^ $(LIBS)
 
 clean:
-	-rm -f pink2d
-	-rm -f obj/*.o
-	-rm -f obj/*.P
-	-rm -f obj/build.h
+  -rm -f pink2d
+  -rm -f obj/*.o
+  -rm -f obj/*.P
+  -rm -f obj/build.h
 
 FORCE:

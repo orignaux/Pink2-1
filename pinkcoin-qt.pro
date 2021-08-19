@@ -45,6 +45,7 @@ macx {
     QMAKE_CFLAGS += -pthread -mmacosx-version-min=10.14 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
     QMAKE_OBJECTIVE_CFLAGS += -mmacosx-version-min=10.14 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
     QMAKE_LFLAGS_THREAD += -pthread
+    QMAKE_LFLAGS_SONAME  = -Wl,-install_name,@executable_path/../Frameworks/
 }
 
 # Platform specific defaults, if not overridden on command line
@@ -60,12 +61,12 @@ isEmpty(BOOST_THREAD_LIB_SUFFIX) {
 }
 
 isEmpty(BOOST_INCLUDE_PATH) {
-    macx:BOOST_INCLUDE_PATH =  /opt/local/include/boost
+    macx:BOOST_INCLUDE_PATH =  /usr/local/Cellar/boost/1.76.0/include/
     windows:BOOST_INCLUDE_PATH = C:/deps/boost_1_57_0
 }
 
 isEmpty(BOOST_LIB_PATH) {
-    macx:BOOST_LIB_PATH = /opt/local/lib
+    macx:BOOST_LIB_PATH = /usr/local/Cellar/boost/1.76.0/lib/
     windows:BOOST_LIB_PATH = C:/deps/boost_1_57_0/stage/lib
 }
 
@@ -74,52 +75,52 @@ isEmpty(BDB_LIB_SUFFIX) {
 }
 
 isEmpty(BDB_INCLUDE_PATH) {
-    macx:BDB_INCLUDE_PATH = /opt/local/include/db48
+    macx:BDB_INCLUDE_PATH = /usr/local/Cellar/berkeley-db@4/4.8.30/include/
     windows:BDB_INCLUDE_PATH = C:/deps/db-4.8.30.NC/build_unix
 }
 
 isEmpty(BDB_LIB_PATH) {
-    macx:BDB_LIB_PATH = /opt/local/lib/db48
+    macx:BDB_LIB_PATH = /usr/local/Cellar/berkeley-db@4/4.8.30/lib/
     windows:BDB_LIB_PATH = C:/deps/db-4.8.30.NC/build_unix
 }
 
 isEmpty(LIBPNG_INCLUDE_PATH) {
-    macx:LIBPNG_INCLUDE_PATH = /opt/local/include/libpng16
+    macx:LIBPNG_INCLUDE_PATH = /usr/local/Cellar/libpng/1.6.37/include
     windows:LIBPNG_INCLUDE_PATH = C:/deps/libpng-1.6.16
 }
 
 isEmpty(LIBPNG_LIB_PATH) {
-    macx:LIBPNG_LIB_PATH = /opt/local/lib
+    macx:LIBPNG_LIB_PATH = /usr/local/Cellar/libpng/1.6.37/lib
     windows:LIBPNG_LIB_PATH = C:/deps/libpng-1.6.16/.libs
 }
 
 isEmpty(MINIUPNPC_INCLUDE_PATH) {
-    macx:MINIUPNPC_INCLUDE_PATH = /opt/local/include/miniupnpc
+    macx:MINIUPNPC_INCLUDE_PATH = /usr/local/Cellar/miniupnpc/2.2.2/include
     windows:MINIUPNPC_INCLUDE_PATH = C:/deps
 }
 
 isEmpty(MINIUPNPC_LIB_PATH) {
-    macx:MINIUPNPC_LIB_PATH = /opt/local/lib
+    macx:MINIUPNPC_LIB_PATH = /usr/local/Cellar/miniupnpc/2.2.2/lib
     windows:MINIUPNPC_LIB_PATH = C:/deps/miniupnpc
 }
 
 isEmpty(QRENCODE_INCLUDE_PATH) {
-    macx:QRENCODE_INCLUDE_PATH = /opt/local/include
+    macx:QRENCODE_INCLUDE_PATH = /usr/local/Cellar/qrencode/4.1.1/include
     windows:QRENCODE_INCLUDE_PATH = C:/deps/qrencode-3.4.4
 }
 
 isEmpty(QRENCODE_LIB_PATH) {
-    macx:QRENCODE_LIB_PATH = /opt/local/lib
+    macx:QRENCODE_LIB_PATH = /usr/local/Cellar/qrencode/4.1.1/lib
     windows:QRENCODE_LIB_PATH=C:/deps/qrencode-3.4.4/.libs
 }
 
 isEmpty(OPENSSL_INCLUDE_PATH) {
-    macx:OPENSSL_INCLUDE_PATH = /opt/local/include/openssl
+    macx:OPENSSL_INCLUDE_PATH = /usr/local/Cellar/openssl@1.1/1.1.1k/include
     windows:OPENSSL_INCLUDE_PATH = C:/deps/openssl-1.0.2h/include
 }
 
 isEmpty(OPENSSL_LIB_PATH) {
-    macx:OPENSSL_LIB_PATH =  /opt/local/lib
+    macx:OPENSSL_LIB_PATH =  /usr/local/Cellar/openssl@1.1/1.1.1k/lib
     windows:OPENSSL_LIB_PATH = C:/deps/openssl-1.0.2h
 }
 
@@ -489,6 +490,20 @@ contains(RELEASE, 1) {
     !windows:!macx {
         # Linux: turn dynamic linking back on for c/c++ runtime libraries
         LIBS += -Wl,-Bdynamic
+    }
+    macx {
+        LIBS+= -dead_strip
+        LIBS += \
+             /usr/local/Cellar/miniupnpc/2.2.2/lib/libminiupnpc.a \
+             /usr/local/Cellar/berkeley-db@4/4.8.30/lib/libdb_cxx-4.8.a \
+             /usr/local/Cellar/boost/1.76.0/lib/libboost_system-mt.a \
+             /usr/local/Cellar/boost/1.76.0/lib/libboost_filesystem-mt.a \
+             /usr/local/Cellar/boost/1.76.0/lib/libboost_program_options-mt.a \
+             /usr/local/Cellar/boost/1.76.0/lib/libboost_thread-mt.a \
+             /usr/local/Cellar/boost/1.76.0/lib/libboost_chrono-mt.a \
+             /usr/local/Cellar/openssl@1.1/1.1.1k/lib/libssl.a \
+             /usr/local/Cellar/openssl@1.1/1.1.1k/lib/libcrypto.a \
+             /usr/local/Cellar/zlib/1.2.11/lib/libz.a
     }
 }
 
