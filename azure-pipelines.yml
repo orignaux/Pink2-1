@@ -5,12 +5,12 @@ variables:
   macos.build.name: 'Pinkcoin-Daemon-MacOS'
   macos.path: '/opt/local/libexec/qt5/bin:/opt/local/bin:/usr/local/opt/coreutils/libexec/gnubin:/usr/local/bin:/usr/local/sbin:/Users/vsts/bin:/Users/vsts/.yarn/bin:/usr/local/go/bin:/Users/vsts/Library/Android/sdk/tools:/Users/vsts/Library/Android/sdk/platform-tools:/Users/vsts/Library/Android/sdk/ndk-bundle:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/usr/bin:/bin:/usr/sbin:/sbin:/Users/vsts/.azcopy'
 
-  # linux.toolkit.name: 'Linux_toolkit'
-  # linux.build.name: 'Pinkcoin-Linux'
-  # linux.qt.prefix: '$(Build.BinariesDirectory)/$(linux.toolkit.name)/qt'
-  # linux.bdb.prefix: '$(Build.BinariesDirectory)/$(linux.toolkit.name)/db4'
-  # linux.qrencode.prefix: '$(Build.BinariesDirectory)/$(linux.toolkit.name)/qrencode'
-  # linux.openssl.prefix: '$(Build.BinariesDirectory)/$(linux.toolkit.name)/openssl'
+  linux.toolkit.name: 'Linux_toolkit'
+  linux.build.name: 'Pinkcoin-Linux'
+  linux.qt.prefix: '$(Build.BinariesDirectory)/$(linux.toolkit.name)/qt'
+  linux.bdb.prefix: '$(Build.BinariesDirectory)/$(linux.toolkit.name)/db4'
+  linux.qrencode.prefix: '$(Build.BinariesDirectory)/$(linux.toolkit.name)/qrencode'
+  linux.openssl.prefix: '$(Build.BinariesDirectory)/$(linux.toolkit.name)/openssl'
 
   # windows.toolkit.name: 'Windows_toolkit'
   # windows.build.name: 'Pinkcoin-windows'
