@@ -84,7 +84,7 @@ jobs:
   parameters:
     path: $(macos.path)
     job1: build_macos_toolkit_1
-    condition: eq(dependencies.init_macos.outputs['check.toolkitExists'], 'false')
+    # condition: eq(dependencies.init_macos.outputs['check.toolkitExists'], 'false')
 
 # --------------------------------------------------------------------------------------------------
 
@@ -121,10 +121,10 @@ jobs:
       buildId: $(toolkitBuildId)
       artifactName: $(macos.toolkit.name)
 
-  - bash: |
-      cd $(Build.BinariesDirectory)/$(macos.toolkit.name)
-      sudo tar xvf toolkit.tar.gz -C /
-    displayName: 'Unpack toolkit files.'
+  # - bash: |
+  #     cd $(Build.BinariesDirectory)/$(macos.toolkit.name)
+  #     sudo tar xvf toolkit.tar.gz -C /
+  #   displayName: 'Unpack toolkit files.'
 
   # Tasks building Pinkcoin binaries for MacOS platform.
   - template: .azure/macos/build-pinkcoin.yml
