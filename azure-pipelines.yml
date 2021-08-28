@@ -135,7 +135,7 @@ jobs:
 
 - job: init_linux
   pool:
-    vmImage: 'Ubuntu 20.04'
+    vmImage: 'Ubuntu 18.04'
     cancelTimeoutInMinutes: 1
   condition: and(ne(variables['Agent.JobStatus'], 'Canceled'), ne(variables['Agent.JobStatus'], 'Failed'))
   steps:
@@ -210,7 +210,7 @@ jobs:
 
 - job: build_pinkcoin_binaries_for_linux
   pool:
-    vmImage: 'Ubuntu 20.04'
+    vmImage: 'Ubuntu 18.04'
     cancelTimeoutInMinutes: 1
   dependsOn:
     - init_linux
