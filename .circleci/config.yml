@@ -110,13 +110,14 @@ jobs:
                 make libz.a
                 make install
       - run:
-          name: Build - boost-1.75.0 [static]
+          name: Build - boost-1.77.0 [static]
           command: |
                 pkg=boost
-                pkg_version=1_75_0
-                pkg_dl_path=https://dl.bintray.com/boostorg/release/1.75.0/source
+                pkg_version=1_77_0
+                pkg_version_dotted=1.77.0
+                pkg_dl_path=https://boostorg.jfrog.io/native/main/release/$pkg_version_dotted/source/boost_$pkg_version.tar.gz
                 pkg_file_name=$pkg"_"$pkg_version.tar.bz2
-                pkg_sha256_hash=953db31e016db7bb207f11432bef7df100516eeb746843fa0486a222e3fd49cb
+                pkg_sha256_hash=5347464af5b14ac54bb945dc68f1dd7c56f0dad7262816b956138fc53bcc0131
                 pkg_deps=zlib
                 pkg_cflags="$HOST_CFLAGS -I$DEPS_PREFIX/include"
                 pkg_cxxflags="$pkg_cflags -std=c++11 -fvisibility=hidden"
