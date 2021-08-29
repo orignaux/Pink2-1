@@ -271,7 +271,7 @@ jobs:
                 make depend
                 make install
       - save_cache:
-          keys: toolkit-cache-V1-{{ .Branch }}
+          key: toolkit-cache-V1-{{ .Branch }}
           paths:
             - $DEPS_PREFIX
       - run:
