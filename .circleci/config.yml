@@ -88,6 +88,8 @@ jobs:
                     wget \
                     ca-certificates
                     mkdir -p $DEPS_PREFIX
+      - restore_cache:
+          keys: toolkit-cache-V1-{{ .Branch }}
       - run:
           name: Build - zlib-1.2.11 [static]
           command: |
@@ -268,6 +270,10 @@ jobs:
                     no-zlib-dynamic
                 make depend
                 make install
+      - save_cache:
+          keys: toolkit-cache-V1-{{ .Branch }}
+          paths:
+            - $DEPS_PREFIX
       - run:
           name: Build - Pinkcoin daemon (pink2d) [static]
           command: |
