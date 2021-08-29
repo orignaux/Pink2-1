@@ -355,6 +355,6 @@ jobs:
 workflows:
   build-deploy:
     jobs:
-      - build-macos
+      # - build-macos
       - build-linux
 
