@@ -39,6 +39,18 @@ jobs:
       - restore_cache:
           key: toolkit-cache-windows-V1-{{ .Branch }}
       - run:
+          name: Build - zlib-1.2.11 [static]
+          command: |
+                wget http://www.zlib.net/zlib-1.2.11.tar.gz
+                echo 'c3e5e9fdd5004dcb542feda5ee4f0ff0744628baf8ed2dd5d66f8ca1197cb1a1 zlib-1.2.11.tar.gz' | sha256sum -c
+                tar xvzf zlib-1.2.11.tar.gz
+                cd zlib-1.2.11
+                ./configure --static --prefix=$DEPS_PREFIX
+                make -j2 CC=x86_64-w64-mingw32-gcc AR=x86_64-w64-mingw32-ar \
+                CFLAGS="-DSTATICLIB -I$DEPS_PREFIX/include" LDFLAGS="-L$DEPS_PREFIX/lib" libz.a
+                make -j2 install CC=x86_64-w64-mingw32-gcc AR=x86_64-w64-mingw32-ar \
+                CFLAGS="-DSTATICLIB -I$DEPS_PREFIX/include" LDFLAGS="-L$DEPS_PREFIX/lib"
+      - run:
           name: Build - libpng-1.6.16 [static]
           command: |
                 wget http://download.sourceforge.net/libpng/libpng-1.6.16.tar.gz
@@ -69,18 +81,6 @@ jobs:
                 ./configure --host=x86_64-w64-mingw32 --disable-shared --enable-static --without-tools --prefix=$DEPS_PREFIX
                 make -j2
                 make -j2 install
-      - run:
-          name: Build - zlib-1.2.11 [static]
-          command: |
-                wget http://www.zlib.net/zlib-1.2.11.tar.gz
-                echo 'c3e5e9fdd5004dcb542feda5ee4f0ff0744628baf8ed2dd5d66f8ca1197cb1a1 zlib-1.2.11.tar.gz' | sha256sum -c
-                tar xvzf zlib-1.2.11.tar.gz
-                cd zlib-1.2.11
-                ./configure --static --prefix=$DEPS_PREFIX
-                make -j2 CC=x86_64-w64-mingw32-gcc AR=x86_64-w64-mingw32-ar \
-                CFLAGS="-DSTATICLIB -I$DEPS_PREFIX/include" LDFLAGS="-L$DEPS_PREFIX/lib" libz.a
-                make -j2 install CC=x86_64-w64-mingw32-gcc AR=x86_64-w64-mingw32-ar \
-                CFLAGS="-DSTATICLIB -I$DEPS_PREFIX/include" LDFLAGS="-L$DEPS_PREFIX/lib"                
       - run:
           name: Build - boost-1.77.0 [static]
           command: |
