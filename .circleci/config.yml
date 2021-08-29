@@ -69,7 +69,7 @@ jobs:
           name: Build - qrencode-4.1.1 [static]
           command: |
                 wget 'https://fukuchi.org/works/qrencode/qrencode-4.1.1.tar.gz'
-                echo 'da448ed4f52aba6bcb0cd48cac0dd51b8692bccc4cd127431402fca6f8171e8ef qrencode-4.1.1.tar.gz' | sha256sum -c
+                echo 'da448ed4f52aba6bcb0cd48cac0dd51b8692bccc4cd127431402fca6f8171e8e qrencode-4.1.1.tar.gz' | sha256sum -c
                 tar -xzvf qrencode-4.1.1.tar.gz
                 cd qrencode-4.1.1
                 CC=x86_64-w64-mingw32-gcc \
