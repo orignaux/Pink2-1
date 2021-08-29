@@ -158,8 +158,8 @@ jobs:
                 make -j2
                 make -j2 install
       - run:
-        name: Build - QT-5.15.2 [static]
-        command: |
+          name: Build - QT-5.15.2 [static]
+          command: |
                 wget 'https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.tar.xz'
                 wget 'https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qttools-everywhere-src-5.15.2.tar.xz'
                 wget 'https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qttranslations-everywhere-src-5.15.2.tar.xz'
