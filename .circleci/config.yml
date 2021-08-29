@@ -103,12 +103,12 @@ jobs:
                     --without-icu \
                     --with-libraries=chrono,filesystem,program_options,system,thread,test
                 ./b2 \
-                    -d2 -d1 \
+                    -d2 -j2 -d1 \
                     --prefix=$DEPS_PREFIX variant=release \
                     --layout=tagged --build-type=complete \
                     --user-config=user-config.jam threading=multi link=static -sNO_BZIP2=1 \
                     -sNO_ZLIB=1 binary-format=pe target-os=windows threadapi=win32 runtime-link=static address-model=64 stage
-                ./b2 -d0 --prefix=$DEPS_PREFIX variant=release --layout=tagged \
+                ./b2 -d0 -j2 --prefix=$DEPS_PREFIX variant=release --layout=tagged \
                     --build-type=complete --user-config=user-config.jam threading=multi link=static \
                     -sNO_BZIP2=1 -sNO_ZLIB=1 binary-format=pe target-os=windows threadapi=win32 \
                     runtime-link=static address-model=64 install
