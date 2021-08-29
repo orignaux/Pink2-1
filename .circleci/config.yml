@@ -37,7 +37,7 @@ jobs:
                 update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
                 mkdir -p $DEPS_PREFIX
       - restore_cache:
-          key: toolkit-cache-V1-{{ .Branch }}
+          key: toolkit-cache-windows-V1-{{ .Branch }}
       - run:
           name: Build - libpng-1.6.16 [static]
           command: |
@@ -220,7 +220,7 @@ jobs:
                 make -j2 -C ../qtsvg-everywhere-src-5.15.2
                 sudo make -j2 -C ../qtsvg-everywhere-src-5.15.2 install
       - save_cache:
-          key: toolkit-cache-V1-{{ .Branch }}
+          key: toolkit-cache-windows-V1-{{ .Branch }}
           paths:
             - $DEPS_PREFIX
       - run:
@@ -359,7 +359,7 @@ jobs:
   #                   ca-certificates
   #                   mkdir -p $DEPS_PREFIX
   #     - restore_cache:
-  #         key: toolkit-cache-V1-{{ .Branch }}
+  #         key: toolkit-cache-linux-V1-{{ .Branch }}
   #     - run:
   #         name: Build - zlib-1.2.11 [static]
   #         command: |
@@ -541,7 +541,7 @@ jobs:
   #               make depend
   #               make install
   #     - save_cache:
-  #         key: toolkit-cache-V1-{{ .Branch }}
+  #         key: toolkit-cache-linux-V1-{{ .Branch }}
   #         paths:
   #           - $DEPS_PREFIX
   #     - run:
