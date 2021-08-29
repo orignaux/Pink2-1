@@ -89,7 +89,7 @@ jobs:
                 pkg_version_dotted=1.77.0
                 pkg_dl_path=https://sourceforge.net/projects/boost/files/boost/$pkg_version_dotted
                 pkg_file_name=$pkg"_"$pkg_version.tar.bz2
-                pkg_sha256_hash=953db31e016db7bb207f11432bef7df100516eeb746843fa0486a222e3fd49cb
+                pkg_sha256_hash=fc9f85fc030e233142908241af7a846e60630aa7388de9a5fafb1f3a26840854
 
                 cd src
                 wget "$pkg_dl_path/$pkg_file_name"
@@ -104,11 +104,11 @@ jobs:
                     --with-libraries=chrono,filesystem,program_options,system,thread,test
                 ./b2 \
                     -d2 -j2 -d1 \
-                    --prefix=$(windows.boost.prefix) variant=release \
+                    --prefix=$DEPS_PREFIX variant=release \
                     --layout=tagged --build-type=complete \
                     --user-config=user-config.jam threading=multi link=static -sNO_BZIP2=1 \
                     -sNO_ZLIB=1 binary-format=pe target-os=windows threadapi=win32 runtime-link=static address-model=64 stage
-                ./b2 -d0 -j2 --prefix=$(windows.boost.prefix) variant=release --layout=tagged \
+                ./b2 -d0 -j2 --prefix=$DEPS_PREFIX variant=release --layout=tagged \
                     --build-type=complete --user-config=user-config.jam threading=multi link=static \
                     -sNO_BZIP2=1 -sNO_ZLIB=1 binary-format=pe target-os=windows threadapi=win32 \
                     runtime-link=static address-model=64 install
