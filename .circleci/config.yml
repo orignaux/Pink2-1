@@ -7,8 +7,8 @@ jobs:
     steps:
       - checkout
       - run:
-        name: Install toolset
-        command: brew install coreutils berkeley-db@4 qt@5 openssl@1.1 boost miniupnpc qrencode zlib
+          name: Install toolset
+          command: brew install coreutils berkeley-db@4 qt@5 openssl@1.1 boost miniupnpc qrencode zlib
       - run:
           name: Build - Pinkcoin daemon (pink2d) [static]
           command: |
