@@ -46,9 +46,9 @@ jobs:
                 tar xvzf zlib-1.2.11.tar.gz
                 cd zlib-1.2.11
                 ./configure --static --prefix=$DEPS_PREFIX
-                make -j2 CC=x86_64-w64-mingw32-gcc AR=x86_64-w64-mingw32-ar \
+                make CC=x86_64-w64-mingw32-gcc AR=x86_64-w64-mingw32-ar \
                 CFLAGS="-DSTATICLIB -I$DEPS_PREFIX/include" LDFLAGS="-L$DEPS_PREFIX/lib" libz.a
-                make -j2 install CC=x86_64-w64-mingw32-gcc AR=x86_64-w64-mingw32-ar \
+                make install CC=x86_64-w64-mingw32-gcc AR=x86_64-w64-mingw32-ar \
                 CFLAGS="-DSTATICLIB -I$DEPS_PREFIX/include" LDFLAGS="-L$DEPS_PREFIX/lib"
       - run:
           name: Build - libpng-1.6.16 [static]
@@ -63,8 +63,8 @@ jobs:
                 LDFLAGS="-L$DEPS_PREFIX/lib -L$DEPS_PREFIX/lib" \
                 ./configure --host=x86_64-w64-mingw32 --prefix=$DEPS_PREFIX --disable-shared \
                 --with-zlib-prefix=$DEPS_PREFIX
-                make -j2
-                make -j2 install
+                make
+                make install
       - run:
           name: Build - qrencode-4.1.1 [static]
           command: |
@@ -79,8 +79,8 @@ jobs:
                 png_CFLAGS="-I$DEPS_PREFIX/include" \
                 png_LIBS="-I$DEPS_PREFIX/include" \
                 ./configure --host=x86_64-w64-mingw32 --disable-shared --enable-static --without-tools --prefix=$DEPS_PREFIX
-                make -j2
-                make -j2 install
+                make
+                make install
       - run:
           name: Build - boost-1.77.0 [static]
           command: |
@@ -103,12 +103,12 @@ jobs:
                     --without-icu \
                     --with-libraries=chrono,filesystem,program_options,system,thread,test
                 ./b2 \
-                    -d2 -j2 -d1 \
+                    -d2 -d1 \
                     --prefix=$DEPS_PREFIX variant=release \
                     --layout=tagged --build-type=complete \
                     --user-config=user-config.jam threading=multi link=static -sNO_BZIP2=1 \
                     -sNO_ZLIB=1 binary-format=pe target-os=windows threadapi=win32 runtime-link=static address-model=64 stage
-                ./b2 -d0 -j2 --prefix=$DEPS_PREFIX variant=release --layout=tagged \
+                ./b2 -d0 --prefix=$DEPS_PREFIX variant=release --layout=tagged \
                     --build-type=complete --user-config=user-config.jam threading=multi link=static \
                     -sNO_BZIP2=1 -sNO_ZLIB=1 binary-format=pe target-os=windows threadapi=win32 \
                     runtime-link=static address-model=64 install
@@ -122,8 +122,8 @@ jobs:
                 CC=/usr/bin/x86_64-w64-mingw32-gcc CXX=/usr/bin/x86_64-w64-mingw32-g++ \
                 ../dist/configure --host=x86_64-w64-mingw32 \
                 --enable-cxx --enable-mingw --disable-replication --disable-shared --prefix=$DEPS_PREFIX
-                make -j2
-                make -j2 install
+                make
+                make install
       - run:
           name: Build - miniupnpc-2.0.20180203 [static]
           command: |
@@ -135,7 +135,7 @@ jobs:
                 AR=x86_64-w64-mingw32-ar \
                 CFLAGS="-DSTATICLIB -I$DEPS_PREFIX/include" \
                 LDFLAGS="-L$DEPS_PREFIX/lib" \
-                make -j2 libminiupnpc.a
+                make libminiupnpc.a
                 mkdir -p $DEPS_PREFIX/include/miniupnpc
                 cp *.h $DEPS_PREFIX/include/miniupnpc
                 cp libminiupnpc.a $DEPS_PREFIX/lib
@@ -155,8 +155,8 @@ jobs:
                 no-ssl3 no-unit-test no-weak-ssl-ciphers no-whirlpool no-zlib \
                 no-zlib-dynamic mingw64
                 make depend
-                make -j2
-                make -j2 install
+                make
+                make install
       - run:
           name: Build - QT-5.15.2 [static]
           command: |
@@ -208,14 +208,14 @@ jobs:
                 cd ../../../../qtsvg-everywhere-src-5.15.2
                 ../qtbase-everywhere-src-5.15.2/bin/qmake qtsvg.pro -o Makefile
                 cd ../qtbase-everywhere-src-5.15.2/
-                make -j2
-                sudo make -j2 install
-                make -j2 -C ../qttools-everywhere-src-5.15.2/src/linguist/lrelease
-                sudo make -j2 -C ../qttools-everywhere-src-5.15.2/src/linguist/lrelease install_target
-                make -j2 -C ../qttranslations-everywhere-src-5.15.2
-                sudo make -j2 -C ../qttranslations-everywhere-src-5.15.2 install_subtargets
-                make -j2 -C ../qtsvg-everywhere-src-5.15.2
-                sudo make -j2 -C ../qtsvg-everywhere-src-5.15.2 install
+                make
+                make install
+                make -C ../qttools-everywhere-src-5.15.2/src/linguist/lrelease
+                make -C ../qttools-everywhere-src-5.15.2/src/linguist/lrelease install_target
+                make -C ../qttranslations-everywhere-src-5.15.2
+                make -C ../qttranslations-everywhere-src-5.15.2 install_subtargets
+                make -C ../qtsvg-everywhere-src-5.15.2
+                make -C ../qtsvg-everywhere-src-5.15.2 install
       - save_cache:
           key: toolkit-cache-windows-V1-{{ .Branch }}
           paths:
@@ -224,7 +224,7 @@ jobs:
           name: Build - Pinkcoin daemon (pink2d) [static]
           command: |
                 cd src
-                make -j2 -f makefile.linux-mingw DEPSDIR=$DEPS_PREFIX TARGET_PLATFORM=x86_64
+                make -f makefile.linux-mingw DEPSDIR=$DEPS_PREFIX TARGET_PLATFORM=x86_64
                 strip pink2d.exe
       - run:
           name: Build - Pinkcoin Qt (pinkcoin-qt)
@@ -248,7 +248,7 @@ jobs:
                 QMAKE_LRELEASE=$DEPS_PREFIX/bin/lrelease \
                 QMAKE_CFLAGS_ISYSTEM= \
                 pinkcoin-qt.pro
-                make -j2 -f Makefile.Release
+                make -f Makefile.Release
                 strip release/Pinkcoin-Qt.exe
       - run:
           name: Set Artifact name as env
