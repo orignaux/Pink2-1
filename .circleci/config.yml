@@ -173,9 +173,6 @@ jobs:
                 tar xf qttranslations-everywhere-src-5.15.2.tar.xz
                 tar xf qtsvg-everywhere-src-5.15.2.tar.xz
                 cd qtbase-everywhere-src-5.15.2/
-                cd src/plugins
-                patch plugins.pro < .azure/windows/fix_no_printer.diff
-                cd ../..
                 SYSROOT=$DEPS_PREFIX
                 export PKG_CONFIG_DIR=
                 export PKG_CONFIG_LIBDIR=$DEPS_PREFIX/lib/pkgconfig:$DEPS_PREFIX/share/pkgconfig
