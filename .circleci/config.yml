@@ -1,56 +1,56 @@
 # .circleci/config.yml
 version: 2.1
 jobs:
-  build-macos:
-    macos:
-      xcode: 12.5.1
-    steps:
-      - checkout
-      - run:
-          name: Install toolset
-          command: brew install coreutils berkeley-db@4 qt@5 openssl@1.1 boost miniupnpc qrencode zlib
-      - run:
-          name: Build - Pinkcoin daemon (pink2d) [static]
-          command: |
-            cd src
-            make -j2 -f makefile.osx STATIC=1 USE_UPNP=1
-            strip pink2d
-      - run:
-          name: Build - Pinkcoin daemon (pink2d) [static]
-          command: |
-            cd src
-            make -j2 -f makefile.osx STATIC=1 USE_UPNP=1
-            strip pink2d
-      - run:
-          name: Build - Pinkcoin Qt (pinkcoin-qt)
-          command: |
-            /usr/local/Cellar/qt@5/5.15.2/bin/qmake \
-            USE_UPNP=1 \
-            USE_DBUS=1 \
-            CONFIG+=c++11 \
-            USE_QRCODE=1 \
-            STATIC=1 \
-            RELEASE=1
-            make -j2
-            strip Pinkcoin-Qt
-      - run:
-          name: Set Artifact name as env
-          command: |
-                echo 'export GIT_COMMIT_ID=$(git rev-parse --short=9 HEAD 2>/dev/null)' >> $BASH_ENV
-                echo 'export BUILD_DATE=$(date "+%Y%m%d%H%M")' >> $BASH_ENV
-                echo 'export BUILD_NAME=pinkcoin-$GIT_COMMIT_ID-$HOST-cibuild-$CIRCLE_BUILD_NUM-$BUILD_DATE' >> $BASH_ENV
-                echo 'export STAGING_DIR=/tmp/build/$BUILD_NAME' >> $BASH_ENV
-      - run:
-          name: Stage artifacts
-          command: |
-                mkdir -p $STAGING_DIR/bin
-                cp src/pink2d $STAGING_DIR/bin
-                cp Pinkcoin-Qt $STAGING_DIR/bin
-                cd /tmp/build
-                tar cvfJ $BUILD_NAME.tar.xz $BUILD_NAME
-                sha256sum $BUILD_NAME.tar.xz >> $BUILD_NAME.tar.xz.sha256
-      - store_artifacts:
-          path: /tmp/build/
+  # build-macos:
+  #   macos:
+  #     xcode: 12.5.1
+  #   steps:
+  #     - checkout
+  #     - run:
+  #         name: Install toolset
+  #         command: brew install coreutils berkeley-db@4 qt@5 openssl@1.1 boost miniupnpc qrencode zlib
+  #     - run:
+  #         name: Build - Pinkcoin daemon (pink2d) [static]
+  #         command: |
+  #           cd src
+  #           make -j2 -f makefile.osx STATIC=1 USE_UPNP=1
+  #           strip pink2d
+  #     - run:
+  #         name: Build - Pinkcoin daemon (pink2d) [static]
+  #         command: |
+  #           cd src
+  #           make -j2 -f makefile.osx STATIC=1 USE_UPNP=1
+  #           strip pink2d
+  #     - run:
+  #         name: Build - Pinkcoin Qt (pinkcoin-qt)
+  #         command: |
+  #           /usr/local/Cellar/qt@5/5.15.2/bin/qmake \
+  #           USE_UPNP=1 \
+  #           USE_DBUS=1 \
+  #           CONFIG+=c++11 \
+  #           USE_QRCODE=1 \
+  #           STATIC=1 \
+  #           RELEASE=1
+  #           make -j2
+  #           strip Pinkcoin-Qt
+  #     - run:
+  #         name: Set Artifact name as env
+  #         command: |
+  #               echo 'export GIT_COMMIT_ID=$(git rev-parse --short=9 HEAD 2>/dev/null)' >> $BASH_ENV
+  #               echo 'export BUILD_DATE=$(date "+%Y%m%d%H%M")' >> $BASH_ENV
+  #               echo 'export BUILD_NAME=pinkcoin-$GIT_COMMIT_ID-$HOST-cibuild-$CIRCLE_BUILD_NUM-$BUILD_DATE' >> $BASH_ENV
+  #               echo 'export STAGING_DIR=/tmp/build/$BUILD_NAME' >> $BASH_ENV
+  #     - run:
+  #         name: Stage artifacts
+  #         command: |
+  #               mkdir -p $STAGING_DIR/bin
+  #               cp src/pink2d $STAGING_DIR/bin
+  #               cp Pinkcoin-Qt $STAGING_DIR/bin
+  #               cd /tmp/build
+  #               tar cvfJ $BUILD_NAME.tar.xz $BUILD_NAME
+  #               sha256sum $BUILD_NAME.tar.xz >> $BUILD_NAME.tar.xz.sha256
+  #     - store_artifacts:
+  #         path: /tmp/build/
   build-linux:
     working_directory: /Pink2
     docker:
@@ -78,6 +78,11 @@ jobs:
                     qt5-qmake \
                     qtbase5-dev-tools \
                     qttools5-dev-tools \
+                    libboost-system-dev libboost-filesystem-dev \
+                    libboost-program-options-dev libboost-thread-dev \
+                    libdb++-dev libminiupnpc-dev wget ca-certificates \
+                    "^libxcb.*" libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxkbcommon-dev libxkbcommon-x11-dev \
+                    libxi-dev libxfixes-dev libxext-dev libx11-dev libfreetype6-dev libfontconfig1-dev libxml2-dev libdbus-1-dev \
                     libqt5svg5-dev \
                     pkg-config \
                     wget \
@@ -109,56 +114,55 @@ jobs:
                     --static
                 make libz.a
                 make install
-      - run:
-          name: Build - boost-1.77.0 [static]
-          command: |
-                pkg=boost
-                pkg_version=1_77_0
-                pkg_version_dotted=1.77.0
-                pkg_dl_path=https://boostorg.jfrog.io/native/main/release/$pkg_version_dotted/source/boost_$pkg_version.tar.gz
-                pkg_file_name=$pkg"_"$pkg_version.tar.bz2
-                pkg_sha256_hash=5347464af5b14ac54bb945dc68f1dd7c56f0dad7262816b956138fc53bcc0131
-                pkg_deps=zlib
-                pkg_cflags="$HOST_CFLAGS -I$DEPS_PREFIX/include"
-                pkg_cxxflags="$pkg_cflags -std=c++11 -fvisibility=hidden"
-                pkg_cxxflags_linux="$pkg_cflags -fPIC"
-                pkg_ldflags="-L$DEPS_PREFIX/lib"
-                pkg_config_libraries="chrono,filesystem,program_options,system,thread,test,iostreams"
-                pkg_config_opts="variant=release --layout=tagged --build-type=complete threading=multi link=static -sNO_COMPRESSION=1"
-                pkg_config_opts_mingw32="target-os=windows binary-format=pe threadapi=win32 runtime-link=static"
-                pkg_config_opts_linux="target-os=linux threadapi=pthread runtime-link=shared"
-                pkg_config_opts_darwin="target-os=darwin runtime-link=shared"
-                pkg_config_opts_x86_64="architecture=x86 address-model=64"
-                pkg_config_opts_i686="architecture=x86 address-model=32"
-                pkg_config_opts_aarch64="address-model=64"
-                pkg_config_opts_armv7a="address-model=32"
+      # - run:
+      #     name: Build - boost-1.75.0 [static]
+      #     command: |
+      #           pkg=boost
+      #           pkg_version=1_75_0
+      #           pkg_dl_path=https://dl.bintray.com/boostorg/release/1.75.0/source
+      #           pkg_file_name=$pkg"_"$pkg_version.tar.bz2
+      #           pkg_sha256_hash=953db31e016db7bb207f11432bef7df100516eeb746843fa0486a222e3fd49cb
+      #           pkg_deps=zlib
+      #           pkg_cflags="$HOST_CFLAGS -I$DEPS_PREFIX/include"
+      #           pkg_cxxflags="$pkg_cflags -std=c++11 -fvisibility=hidden"
+      #           pkg_cxxflags_linux="$pkg_cflags -fPIC"
+      #           pkg_ldflags="-L$DEPS_PREFIX/lib"
+      #           pkg_config_libraries="chrono,filesystem,program_options,system,thread,test,iostreams"
+      #           pkg_config_opts="variant=release --layout=tagged --build-type=complete threading=multi link=static -sNO_COMPRESSION=1"
+      #           pkg_config_opts_mingw32="target-os=windows binary-format=pe threadapi=win32 runtime-link=static"
+      #           pkg_config_opts_linux="target-os=linux threadapi=pthread runtime-link=shared"
+      #           pkg_config_opts_darwin="target-os=darwin runtime-link=shared"
+      #           pkg_config_opts_x86_64="architecture=x86 address-model=64"
+      #           pkg_config_opts_i686="architecture=x86 address-model=32"
+      #           pkg_config_opts_aarch64="address-model=64"
+      #           pkg_config_opts_armv7a="address-model=32"
 
-                cd src
-                wget "$pkg_dl_path/$pkg_file_name"
-                echo "$pkg_sha256_hash $pkg_file_name" | sha256sum -c
-                tar xfj $pkg_file_name
+      #           cd src
+      #           wget "$pkg_dl_path/$pkg_file_name"
+      #           echo "$pkg_sha256_hash $pkg_file_name" | sha256sum -c
+      #           tar xfj $pkg_file_name
 
-                cd $pkg"_"$pkg_version
-                CFLAGS="$pkg_cflags" \
-                CXXFLAGS="$pkg_cxxflags $pkg_cxxflags_linux" \
-                CPPFLAGS="$pkg_cppflags" \
-                LDFLAGS="$pkg_ldflags" \
-                ./bootstrap.sh \
-                    --without-icu \
-                    --with-libraries="$pkg_config_libraries"
+      #           cd $pkg"_"$pkg_version
+      #           CFLAGS="$pkg_cflags" \
+      #           CXXFLAGS="$pkg_cxxflags $pkg_cxxflags_linux" \
+      #           CPPFLAGS="$pkg_cppflags" \
+      #           LDFLAGS="$pkg_ldflags" \
+      #           ./bootstrap.sh \
+      #               --without-icu \
+      #               --with-libraries="$pkg_config_libraries"
 
-                ./b2 -d2 -j2 -d1 \
-                    --prefix=$DEPS_PREFIX \
-                    $pkg_config_opts \
-                    $pkg_config_opts_linux \
-                    $pkg_config_opts_x86_64 \
-                    stage
-                ./b2 -d0 -j4 \
-                    --prefix=$DEPS_PREFIX \
-                    $pkg_config_opts \
-                    $pkg_config_opts_linux \
-                    $pkg_config_opts_x86_64 \
-                    install
+      #           ./b2 -d2 -j2 -d1 \
+      #               --prefix=$DEPS_PREFIX \
+      #               $pkg_config_opts \
+      #               $pkg_config_opts_linux \
+      #               $pkg_config_opts_x86_64 \
+      #               stage
+      #           ./b2 -d0 -j4 \
+      #               --prefix=$DEPS_PREFIX \
+      #               $pkg_config_opts \
+      #               $pkg_config_opts_linux \
+      #               $pkg_config_opts_x86_64 \
+      #               install
       - run:
           name: Build - db-4.8.30.NC [static]
           command: |
