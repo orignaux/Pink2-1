@@ -46,9 +46,9 @@ jobs:
                 tar xvzf zlib-1.2.11.tar.gz
                 cd zlib-1.2.11
                 ./configure --static --prefix=$DEPS_PREFIX
-                make CC=x86_64-w64-mingw32-gcc AR=x86_64-w64-mingw32-ar \
+                make -j2 CC=x86_64-w64-mingw32-gcc AR=x86_64-w64-mingw32-ar \
                 CFLAGS="-DSTATICLIB -I$DEPS_PREFIX/include" LDFLAGS="-L$DEPS_PREFIX/lib" libz.a
-                make install CC=x86_64-w64-mingw32-gcc AR=x86_64-w64-mingw32-ar \
+                make -j2 install CC=x86_64-w64-mingw32-gcc AR=x86_64-w64-mingw32-ar \
                 CFLAGS="-DSTATICLIB -I$DEPS_PREFIX/include" LDFLAGS="-L$DEPS_PREFIX/lib"
       - run:
           name: Build - libpng-1.6.16 [static]
@@ -63,8 +63,8 @@ jobs:
                 LDFLAGS="-L$DEPS_PREFIX/lib -L$DEPS_PREFIX/lib" \
                 ./configure --host=x86_64-w64-mingw32 --prefix=$DEPS_PREFIX --disable-shared \
                 --with-zlib-prefix=$DEPS_PREFIX
-                make
-                make install
+                make -j2
+                make -j2 install
       - run:
           name: Build - qrencode-4.1.1 [static]
           command: |
@@ -79,8 +79,8 @@ jobs:
                 png_CFLAGS="-I$DEPS_PREFIX/include" \
                 png_LIBS="-I$DEPS_PREFIX/include" \
                 ./configure --host=x86_64-w64-mingw32 --disable-shared --enable-static --without-tools --prefix=$DEPS_PREFIX
-                make
-                make install
+                make -j2
+                make -j2 install
       - run:
           name: Build - boost-1.77.0 [static]
           command: |
@@ -122,8 +122,8 @@ jobs:
                 CC=/usr/bin/x86_64-w64-mingw32-gcc CXX=/usr/bin/x86_64-w64-mingw32-g++ \
                 ../dist/configure --host=x86_64-w64-mingw32 \
                 --enable-cxx --enable-mingw --disable-replication --disable-shared --prefix=$DEPS_PREFIX
-                make
-                make install
+                make -j2
+                make -j2 install
       - run:
           name: Build - miniupnpc-2.0.20180203 [static]
           command: |
@@ -135,7 +135,7 @@ jobs:
                 AR=x86_64-w64-mingw32-ar \
                 CFLAGS="-DSTATICLIB -I$DEPS_PREFIX/include" \
                 LDFLAGS="-L$DEPS_PREFIX/lib" \
-                make libminiupnpc.a
+                make -j2 libminiupnpc.a
                 mkdir -p $DEPS_PREFIX/include/miniupnpc
                 cp *.h $DEPS_PREFIX/include/miniupnpc
                 cp libminiupnpc.a $DEPS_PREFIX/lib
@@ -154,9 +154,8 @@ jobs:
                 no-rfc3779 no-sctp no-sctp no-seed no-shared no-ssl-trace no-ssl2 \
                 no-ssl3 no-unit-test no-weak-ssl-ciphers no-whirlpool no-zlib \
                 no-zlib-dynamic mingw64
-                make depend
-                make
-                make install
+                make -j2
+                make -j2 install
       - run:
           name: Build - QT-5.15.2 [static]
           command: |
@@ -175,7 +174,7 @@ jobs:
                 cd qtbase-everywhere-src-5.15.2/
                 SYSROOT=$DEPS_PREFIX
                 export PKG_CONFIG_DIR=
-                export PKG_CONFIG_LIBDIR=/usr/x86_64-w64-mingw32/lib/pkgconfig:/usr/x86_64-w64-mingw32/share/pkgconfig
+                export PKG_CONFIG_LIBDIR=$DEPS_PREFIX/lib/pkgconfig:$DEPS_PREFIX/share/pkgconfig
                 export PKG_CONFIG_SYSROOT_DIR=$DEPS_PREFIX
                 export OPENSSL_LIBS="$DEPS_PREFIX/lib/libssl.a $DEPS_PREFIX/lib/libcrypto.a /usr/x86_64-w64-mingw32/lib/libws2_32.a /usr/x86_64-w64-mingw32/lib/libgdi32.a"
                 ./configure -prefix $DEPS_PREFIX -xplatform win32-g++ \
@@ -195,7 +194,8 @@ jobs:
                 -no-feature-ftp -no-feature-lcdnumber -no-feature-pdf -no-feature-concurrent \
                 -no-feature-sql -no-feature-statemachine -no-feature-syntaxhighlighter \
                 -no-feature-textbrowser -no-feature-textodfwriter \
-                -no-feature-wizard -no-feature-xml
+                -no-feature-wizard -no-feature-xml \
+                -I $DEPS_PREFIX/include -L $DEPS_PREFIX/lib
                 echo "host_build: QT_CONFIG ~= s/system-zlib/zlib" >> mkspecs/qconfig.pri
                 echo "CONFIG += force_bootstrap" >> mkspecs/qconfig.pri
                 make sub-src-clean
@@ -208,14 +208,14 @@ jobs:
                 cd ../../../../qtsvg-everywhere-src-5.15.2
                 ../qtbase-everywhere-src-5.15.2/bin/qmake qtsvg.pro -o Makefile
                 cd ../qtbase-everywhere-src-5.15.2/
-                make
-                make install
-                make -C ../qttools-everywhere-src-5.15.2/src/linguist/lrelease
-                make -C ../qttools-everywhere-src-5.15.2/src/linguist/lrelease install_target
-                make -C ../qttranslations-everywhere-src-5.15.2
-                make -C ../qttranslations-everywhere-src-5.15.2 install_subtargets
-                make -C ../qtsvg-everywhere-src-5.15.2
-                make -C ../qtsvg-everywhere-src-5.15.2 install
+                make -j2
+                make -j2 install
+                make -j2 -C ../qttools-everywhere-src-5.15.2/src/linguist/lrelease
+                make -j2 -C ../qttools-everywhere-src-5.15.2/src/linguist/lrelease install_target
+                make -j2 -C ../qttranslations-everywhere-src-5.15.2
+                make -j2 -C ../qttranslations-everywhere-src-5.15.2 install_subtargets
+                make -j2 -C ../qtsvg-everywhere-src-5.15.2
+                make -j2 -C ../qtsvg-everywhere-src-5.15.2 install
       - save_cache:
           key: toolkit-cache-windows-V1-{{ .Branch }}
           paths:
@@ -224,7 +224,7 @@ jobs:
           name: Build - Pinkcoin daemon (pink2d) [static]
           command: |
                 cd src
-                make -f makefile.linux-mingw DEPSDIR=$DEPS_PREFIX TARGET_PLATFORM=x86_64
+                make -j2 -f makefile.linux-mingw DEPSDIR=$DEPS_PREFIX TARGET_PLATFORM=x86_64
                 strip pink2d.exe
       - run:
           name: Build - Pinkcoin Qt (pinkcoin-qt)
@@ -248,7 +248,7 @@ jobs:
                 QMAKE_LRELEASE=$DEPS_PREFIX/bin/lrelease \
                 QMAKE_CFLAGS_ISYSTEM= \
                 pinkcoin-qt.pro
-                make -f Makefile.Release
+                make -j2 -f Makefile.Release
                 strip release/Pinkcoin-Qt.exe
       - run:
           name: Set Artifact name as env
