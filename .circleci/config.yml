@@ -89,7 +89,7 @@ jobs:
                     ca-certificates
                     mkdir -p $DEPS_PREFIX
       - restore_cache:
-          keys: toolkit-cache-V1-{{ .Branch }}
+          key: toolkit-cache-V1-{{ .Branch }}
       - run:
           name: Build - zlib-1.2.11 [static]
           command: |
