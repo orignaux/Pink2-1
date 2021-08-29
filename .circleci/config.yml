@@ -25,7 +25,7 @@ jobs:
                     build-essential \
                     python3 \
                     gettext \
-                    g++-mingw-w64-x86-64 \
+                    g++-mingw-w64-x86-64 mingw-w64-x86-64-dev \
                     git \
                     libdb++-dev libminiupnpc-dev wget ca-certificates \
                     "^libxcb.*" libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxkbcommon-dev libxkbcommon-x11-dev \
@@ -175,9 +175,9 @@ jobs:
                 cd qtbase-everywhere-src-5.15.2/
                 SYSROOT=$DEPS_PREFIX
                 export PKG_CONFIG_DIR=
-                export PKG_CONFIG_LIBDIR=$DEPS_PREFIX/lib/pkgconfig:$DEPS_PREFIX/share/pkgconfig
+                export PKG_CONFIG_LIBDIR=/usr/x86_64-w64-mingw32/lib/pkgconfig:/usr/x86_64-w64-mingw32/share/pkgconfig
                 export PKG_CONFIG_SYSROOT_DIR=$DEPS_PREFIX
-                export OPENSSL_LIBS="$DEPS_PREFIX/lib/libssl.a $DEPS_PREFIX/lib/libcrypto.a $DEPS_PREFIX/lib/libws2_32.a $DEPS_PREFIX/lib/libgdi32.a"
+                export OPENSSL_LIBS="$DEPS_PREFIX/lib/libssl.a $DEPS_PREFIX/lib/libcrypto.a /usr/x86_64-w64-mingw32/lib/libws2_32.a /usr/x86_64-w64-mingw32/lib/libgdi32.a"
                 ./configure -prefix $DEPS_PREFIX -xplatform win32-g++ \
                 -device-option CROSS_COMPILE=x86_64-w64-mingw32- \
                 -release -c++std c++11 -confirm-license -opensource \
