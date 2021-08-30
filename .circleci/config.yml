@@ -7,7 +7,7 @@ jobs:
       - image: ubuntu:focal
         environment:
           FROM_BUILD: "Pink2"
-          HOST: "x86_64-linux-gnu"
+          HOST: "x86_64-w64-mingw32"
           HOST_CFLAGS: "-O2 -pipe"
           HOST_CXXFLAGS: "-O2 -pipe"
           DEPS_PREFIX: "/opt/x86_64-linux-gnu"
@@ -234,7 +234,7 @@ jobs:
           name: Build - Pinkcoin Qt (pinkcoin-qt)
           command: |
                 $DEPS_PREFIX/bin/qmake \
-                USE_UPNP=0 CONFIG+=c++11 USE_QRCODE=1 STATIC=1 RELEASE=1 \
+                USE_UPNP=1 CONFIG+=c++11 USE_QRCODE=1 STATIC=1 RELEASE=1 \
                 DEPS_INCLUDE_PATH=$DEPS_PREFIX/include \
                 DEPS_LIB_PATH=$DEPS_PREFIX/lib \
                 QRENCODE_INCLUDE_PATH=$DEPS_PREFIX/include \
