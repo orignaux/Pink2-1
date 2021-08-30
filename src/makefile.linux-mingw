@@ -26,11 +26,11 @@ LIBPATHS= \
  -L"$(LIBDIR)"
 
 LIBS= \
- -l boost_system-mt-s \
- -l boost_filesystem-mt-s \
- -l boost_program_options-mt-s \
- -l boost_thread_win32-mt-s \
- -l boost_chrono-mt-s \
+ -l boost_system-mt-s-x64 \
+ -l boost_filesystem-mt-s-x64 \
+ -l boost_program_options-mt-s-x64 \
+ -l boost_thread_mt-s-x64 \
+ -l boost_chrono-mt-s-x64 \
  -l db_cxx \
  -l ssl \
  -l crypto \
