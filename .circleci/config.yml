@@ -224,12 +224,12 @@ jobs:
           key: toolkit-cache-windows-V1-{{ .Branch }}
           paths:
             - $DEPS_PREFIX
-      - run:
-          name: Build - Pinkcoin daemon (pink2d) [static]
-          command: |
-                cd src
-                make -j2 -f makefile.linux-mingw DEPSDIR=$DEPS_PREFIX TARGET_PLATFORM=x86_64
-                strip pink2d.exe
+      # - run:
+      #     name: Build - Pinkcoin daemon (pink2d) [static]
+      #     command: |
+      #           cd src
+      #           make -j2 -f makefile.linux-mingw DEPSDIR=$DEPS_PREFIX TARGET_PLATFORM=x86_64
+      #           strip pink2d.exe
       - run:
           name: Build - Pinkcoin Qt (pinkcoin-qt)
           command: |
