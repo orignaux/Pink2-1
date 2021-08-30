@@ -632,6 +632,6 @@ workflows:
   build-deploy:
     jobs:
       - build-windows
-      - build-macos
+      # - build-macos
       # - build-linux
 
