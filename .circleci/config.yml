@@ -281,8 +281,6 @@ jobs:
           name: Install toolset
           command: |
             brew install coreutils berkeley-db@4 qt@5 openssl@1.1 boost miniupnpc qrencode zlib
-            export LDFLAGS="-L/usr/local/opt/berkeley-db@4/lib -L/usr/local/opt/qt@5/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/zlib/lib"
-            export CPPFLAGS="-I/usr/local/opt/berkeley-db@4/include -I/usr/local/opt/qt@5/include -I/usr/local/opt/openssl@1.1/include -I/usr/local/opt/zlib/include"
       - run:
           name: Build - Pinkcoin daemon (pink2d) [static]
           command: |
@@ -305,7 +303,7 @@ jobs:
             USE_QRCODE=1 \
             STATIC=1 \
             RELEASE=1
-            make -j2
+            make -j2 -L/usr/local/opt/berkeley-db@4/lib -L/usr/local/opt/qt@5/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/zlib/lib -I/usr/local/opt/berkeley-db@4/include -I/usr/local/opt/qt@5/include -I/usr/local/opt/openssl@1.1/include -I/usr/local/opt/zlib/include
             strip Pinkcoin-Qt
       - run:
           name: Set Artifact name as env
