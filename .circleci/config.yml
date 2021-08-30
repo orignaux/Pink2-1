@@ -94,7 +94,6 @@ jobs:
                 pkg_file_name=$pkg"_"$pkg_version.tar.bz2
                 pkg_sha256_hash=fc9f85fc030e233142908241af7a846e60630aa7388de9a5fafb1f3a26840854
 
-                cd src
                 wget "$pkg_dl_path/$pkg_file_name"
                 echo "$pkg_sha256_hash $pkg_file_name" | sha256sum -c
                 tar xfj $pkg_file_name
@@ -252,6 +251,9 @@ jobs:
                 QMAKE_LRELEASE=$DEPS_PREFIX/bin/lrelease \
                 QMAKE_CFLAGS_ISYSTEM= \
                 pinkcoin-qt.pro
+                cd src/leveldb
+                TARGET_OS=OS_WINDOWS_CROSSCOMPILE make libleveldb.a libmemenv.a
+                cd ../..
                 make -j2 -f Makefile.Release
                 strip release/Pinkcoin-Qt.exe
       - run:
