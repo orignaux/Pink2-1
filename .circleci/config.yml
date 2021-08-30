@@ -11,11 +11,14 @@ jobs:
           HOST_CFLAGS: "-O2 -pipe"
           HOST_CXXFLAGS: "-O2 -pipe"
           DEPS_PREFIX: "/opt/x86_64-linux-gnu"
+          TZ: Europe/Madrid
     steps:
       - checkout
       - run:
           name: Install toolset
           command: |
+                ln -snf /usr/share/zoneinfo/$TZ /etc/localtime
+                echo $TZ > /etc/timezone
                 echo APT::Install-Recommends "0"; >> /etc/apt/apt.conf &&
                 echo APT::Install-Suggests "0"; >> /etc/apt/apt.conf &&
                 apt-get update
@@ -154,6 +157,7 @@ jobs:
                 no-rfc3779 no-sctp no-sctp no-seed no-shared no-ssl-trace no-ssl2 \
                 no-ssl3 no-unit-test no-weak-ssl-ciphers no-whirlpool no-zlib \
                 no-zlib-dynamic mingw64
+                make depend
                 make -j2
                 make -j2 install
       - run:
