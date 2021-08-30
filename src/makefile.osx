@@ -15,14 +15,14 @@ INCLUDEPATHS= \
  -I"$(DEPSDIR)/miniupnpc/2.2.2/include" \
  -I"$(DEPSDIR)/berkeley-db@4/4.8.30/include" \
  -I"$(DEPSDIR)/boost/1.76.0/include" \
- -I"$(DEPSDIR)/openssl@1.1/1.1.1k/include" \
+ -I"$(DEPSDIR)/openssl@1.1/1.1.1l/include" \
  -I"$(DEPSDIR)/zlib/1.2.11/include"
 
 LIBPATHS= \
  -L"$(DEPSDIR)/miniupnpc/2.2.2/lib" \
  -L"$(DEPSDIR)/berkeley-db@4/4.8.30/lib" \
  -L"$(DEPSDIR)/boost/1.76.0/lib" \
- -L"$(DEPSDIR)/openssl@1.1/1.1.1k/lib" \
+ -L"$(DEPSDIR)/openssl@1.1/1.1.1l/lib" \
  -L"$(DEPSDIR)/zlib/1.2.11/lib"
 
 USE_UPNP:=1
@@ -39,8 +39,8 @@ LIBS += \
  $(DEPSDIR)/boost/1.76.0/lib/libboost_program_options-mt.a \
  $(DEPSDIR)/boost/1.76.0/lib/libboost_thread-mt.a \
  $(DEPSDIR)/boost/1.76.0/lib/libboost_chrono-mt.a \
- $(DEPSDIR)/openssl@1.1/1.1.1k/lib/libssl.a \
- $(DEPSDIR)/openssl@1.1/1.1.1k/lib/libcrypto.a \
+ $(DEPSDIR)/openssl@1.1/1.1.1l/lib/libssl.a \
+ $(DEPSDIR)/openssl@1.1/1.1.1l/lib/libcrypto.a \
  $(DEPSDIR)/zlib/1.2.11/lib/libz.a
 else
 LIBS += \
