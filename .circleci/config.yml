@@ -223,7 +223,7 @@ jobs:
       - save_cache:
           key: toolkit-cache-windows-V1-{{ .Branch }}
           paths:
-            - $DEPS_PREFIX
+            - /opt/x86_64-linux-gnu
       # - run:
       #     name: Build - Pinkcoin daemon (pink2d) [static]
       #     command: |
