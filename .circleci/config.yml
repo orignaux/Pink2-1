@@ -4,7 +4,7 @@ jobs:
   build-windows:
     working_directory: /Pink2
     docker:
-      - image: ubuntu:bionic
+      - image: ubuntu:focal
         environment:
           FROM_BUILD: "Pink2"
           HOST: "x86_64-linux-gnu"
