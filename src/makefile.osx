@@ -7,23 +7,23 @@
 # Originally by Laszlo Hanyecz (solar@heliacal.net)
 
 CXX=llvm-g++
-DEPSDIR=/usr/local/Cellar
+DEPSDIR=/usr/local/opt/
 
 INCLUDEPATHS= \
  -I"$(CURDIR)" \
  -I"$(CURDIR)"/obj \
- -I"$(DEPSDIR)/miniupnpc/2.2.2/include" \
- -I"$(DEPSDIR)/berkeley-db@4/4.8.30/include" \
- -I"$(DEPSDIR)/boost/1.76.0/include" \
- -I"$(DEPSDIR)/openssl@1.1/1.1.1l/include" \
- -I"$(DEPSDIR)/zlib/1.2.11/include"
+ -I"$(DEPSDIR)/miniupnpc/include" \
+ -I"$(DEPSDIR)/berkeley-db@4/include" \
+ -I"$(DEPSDIR)/boost/include" \
+ -I"$(DEPSDIR)/openssl/include" \
+ -I"$(DEPSDIR)/zlib/include"
 
 LIBPATHS= \
- -L"$(DEPSDIR)/miniupnpc/2.2.2/lib" \
- -L"$(DEPSDIR)/berkeley-db@4/4.8.30/lib" \
- -L"$(DEPSDIR)/boost/1.76.0/lib" \
- -L"$(DEPSDIR)/openssl@1.1/1.1.1l/lib" \
- -L"$(DEPSDIR)/zlib/1.2.11/lib"
+ -L"$(DEPSDIR)/miniupnpc/lib" \
+ -L"$(DEPSDIR)/berkeley-db@4/lib" \
+ -L"$(DEPSDIR)/boost/lib" \
+ -L"$(DEPSDIR)/openssl/lib" \
+ -L"$(DEPSDIR)/zlib/lib"
 
 USE_UPNP:=1
 
@@ -32,16 +32,16 @@ LIBS= -dead_strip
 ifdef STATIC
 # Build STATIC if you are redistributing the pink2d binary
 LIBS += \
- $(DEPSDIR)/miniupnpc/2.2.2/lib/libminiupnpc.a \
- $(DEPSDIR)/berkeley-db@4/4.8.30/lib/libdb_cxx-4.8.a \
- $(DEPSDIR)/boost/1.76.0/lib/libboost_system-mt.a \
- $(DEPSDIR)/boost/1.76.0/lib/libboost_filesystem-mt.a \
- $(DEPSDIR)/boost/1.76.0/lib/libboost_program_options-mt.a \
- $(DEPSDIR)/boost/1.76.0/lib/libboost_thread-mt.a \
- $(DEPSDIR)/boost/1.76.0/lib/libboost_chrono-mt.a \
- $(DEPSDIR)/openssl@1.1/1.1.1l/lib/libssl.a \
- $(DEPSDIR)/openssl@1.1/1.1.1l/lib/libcrypto.a \
- $(DEPSDIR)/zlib/1.2.11/lib/libz.a
+ $(DEPSDIR)/miniupnpc/lib/libminiupnpc.a \
+ $(DEPSDIR)/berkeley-db@4/lib/libdb_cxx-4.8.a \
+ $(DEPSDIR)/boost/lib/libboost_system-mt.a \
+ $(DEPSDIR)/boost/lib/libboost_filesystem-mt.a \
+ $(DEPSDIR)/boost/lib/libboost_program_options-mt.a \
+ $(DEPSDIR)/boost/lib/libboost_thread-mt.a \
+ $(DEPSDIR)/boost/lib/libboost_chrono-mt.a \
+ $(DEPSDIR)/openssl/lib/libssl.a \
+ $(DEPSDIR)/openssl/lib/libcrypto.a \
+ $(DEPSDIR)/zlib/lib/libz.a
 else
 LIBS += \
  -ldb_cxx-4.8 \
@@ -114,7 +114,7 @@ endif
 ifneq (${USE_UPNP}, -)
 	DEFS += -DUSE_UPNP=$(USE_UPNP)
 ifdef STATIC
-	LIBS += $(DEPSDIR)/miniupnpc/2.2.2/lib/libminiupnpc.a
+	LIBS += $(DEPSDIR)/miniupnpc/lib/libminiupnpc.a
 else
 	LIBS += -lminiupnpc
 endif
