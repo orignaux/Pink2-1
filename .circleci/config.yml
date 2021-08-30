@@ -39,8 +39,8 @@ jobs:
                     ca-certificates
                 update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
                 mkdir -p $DEPS_PREFIX
-      # - restore_cache:
-      #     key: toolkit-cache-windows-V2-{{ .Branch }}
+      - restore_cache:
+          key: toolkit-cache-windows-V2-{{ .Branch }}
       - run:
           name: Build - zlib-1.2.11 [static]
           command: |
@@ -233,7 +233,7 @@ jobs:
           name: Build - Pinkcoin Qt (pinkcoin-qt)
           command: |
                 $DEPS_PREFIX/bin/qmake \
-                USE_UPNP=1 CONFIG+=c++11 USE_QRCODE=1 STATIC=1 RELEASE=1 \
+                USE_UPNP=- CONFIG+=c++11 USE_QRCODE=1 STATIC=1 RELEASE=1 \
                 DEPS_INCLUDE_PATH=$DEPS_PREFIX/include \
                 DEPS_LIB_PATH=$DEPS_PREFIX/lib \
                 QRENCODE_INCLUDE_PATH=$DEPS_PREFIX/include \
