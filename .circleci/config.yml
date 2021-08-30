@@ -239,8 +239,8 @@ jobs:
                 DEPS_LIB_PATH=$DEPS_PREFIX/lib \
                 QRENCODE_INCLUDE_PATH=$DEPS_PREFIX/include \
                 QRENCODE_LIB_PATH=$DEPS_PREFIX/lib \
-                BOOST_LIB_SUFFIX=-mt-s \
-                BOOST_THREAD_LIB_SUFFIX=_win32-mt-s \
+                BOOST_LIB_SUFFIX=-mt-s-x64 \
+                BOOST_THREAD_LIB_SUFFIX=-mt-s-x64 \
                 BOOST_INCLUDE_PATH=$DEPS_PREFIX/include/boost \
                 BOOST_LIB_PATH=$DEPS_PREFIX/lib \
                 OPENSSL_INCLUDE_PATH=$DEPS_PREFIX/include \
