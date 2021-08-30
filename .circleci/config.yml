@@ -292,18 +292,18 @@ jobs:
             cd src
             make -j2 -f makefile.osx STATIC=1 USE_UPNP=1
             strip pink2d
-      # - run:
-      #     name: Build - Pinkcoin Qt (pinkcoin-qt)
-      #     command: |
-      #       /usr/local/Cellar/qt@5/5.15.2/bin/qmake \
-      #       USE_UPNP=1 \
-      #       USE_DBUS=1 \
-      #       CONFIG+=c++11 \
-      #       USE_QRCODE=1 \
-      #       STATIC=1 \
-      #       RELEASE=1
-      #       make -j2
-      #       strip Pinkcoin-Qt
+      - run:
+          name: Build - Pinkcoin Qt (pinkcoin-qt)
+          command: |
+            /usr/local/Cellar/qt@5/5.15.2/bin/qmake \
+            USE_UPNP=1 \
+            USE_DBUS=1 \
+            CONFIG+=c++11 \
+            USE_QRCODE=1 \
+            STATIC=1 \
+            RELEASE=1
+            make -j2
+            strip Pinkcoin-Qt
       - run:
           name: Set Artifact name as env
           command: |
