@@ -296,7 +296,7 @@ jobs:
       - run:
           name: Build - Pinkcoin Qt (pinkcoin-qt)
           command: |
-            /usr/local/Cellar/qt@5/5.15.2/bin/qmake \
+            /usr/local/opt/qt@5/bin/qmake \
             USE_UPNP=1 \
             USE_DBUS=1 \
             CONFIG+=c++11 \
@@ -304,6 +304,7 @@ jobs:
             STATIC=1 \
             RELEASE=1
             make -j2
+            /usr/local/opt/qt@5/bin/macdeployqt Pinkcoin-Qt.app -dmg
       - run:
           name: Set Artifact name as env
           command: |
@@ -316,7 +317,7 @@ jobs:
           command: |
                 mkdir -p $STAGING_DIR/bin
                 cp src/pink2d $STAGING_DIR/bin
-                cp Pinkcoin-Qt $STAGING_DIR/bin
+                cp Pinkcoin-Qt.dmg $STAGING_DIR/bin
                 cd /tmp/build
                 tar cvfJ $BUILD_NAME.tar.xz $BUILD_NAME
                 sha256sum $BUILD_NAME.tar.xz >> $BUILD_NAME.tar.xz.sha256
