@@ -266,10 +266,10 @@ jobs:
       - run:
           name: Stage artifacts
           command: |
-                mkdir -p $STAGING_DIR/bin
-                cp src/pink2d.exe $STAGING_DIR/bin
-                cp release/Pinkcoin-Qt.exe $STAGING_DIR/bin
-                cd $STAGING_DIR/bin
+                mkdir -p $STAGING_DIR/windows
+                cp src/pink2d.exe $STAGING_DIR/windows
+                cp release/Pinkcoin-Qt.exe $STAGING_DIR/windows
+                cd $STAGING_DIR/windows
                 zip pink2d.exe.zip pink2d.exe
                 rm pink2d.exe
                 zip Pinkcoin-Qt.exe.zip Pinkcoin-Qt.exe
@@ -284,17 +284,10 @@ jobs:
       xcode: 12.5.1
     steps:
       - checkout
-      - restore_cache:
-          key: toolkit-cache-macos-V1-{{ .Branch }}
       - run:
           name: Install toolset
           command: |
             brew install coreutils berkeley-db@4 qt@5 openssl@1.1 boost miniupnpc qrencode zlib
-      - save_cache:
-          key: toolkit-cache-macos-V1-{{ .Branch }}
-          paths:
-            - /usr/local/Cellar
-            - /usr/local/opt
       - run:
           name: Build - Pinkcoin daemon (pink2d) [static]
           command: |
@@ -329,9 +322,9 @@ jobs:
       - run:
           name: Stage artifacts
           command: |
-                mkdir -p $STAGING_DIR/bin
-                cp src/pink2d $STAGING_DIR/bin
-                cp Pinkcoin-Qt.dmg $STAGING_DIR/bin
+                mkdir -p $STAGING_DIR/macos
+                cp src/pink2d $STAGING_DIR/macos
+                cp Pinkcoin-Qt.dmg $STAGING_DIR/macos
                 cd /tmp/build
                 tar cvfJ $BUILD_NAME.tar.xz $BUILD_NAME
                 sha256sum $BUILD_NAME.tar.xz >> $BUILD_NAME.tar.xz.sha256
@@ -633,19 +626,39 @@ jobs:
       - run:
           name: Stage artifacts
           command: |
-                mkdir -p $STAGING_DIR/bin
-                cp src/pink2d $STAGING_DIR/bin
-                cp Pinkcoin-Qt $STAGING_DIR/bin
+                mkdir -p $STAGING_DIR/linux
+                cp src/pink2d $STAGING_DIR/linux
+                cp Pinkcoin-Qt $STAGING_DIR/linux
                 cd /tmp/build
                 tar cvfJ $BUILD_NAME.tar.xz $BUILD_NAME
                 sha256sum $BUILD_NAME.tar.xz >> $BUILD_NAME.tar.xz.sha256
       - store_artifacts:
           path: /tmp/build/
-  destination: linux
+  publish-github-release:
+    docker:
+      - image: cibuilds/github:0.10
+    steps:
+      - attach_workspace:
+          at: ./artifacts
+      - run:
+          name: "Publish Release on GitHub"
+          command: |
+            VERSION=$(linux/pink2d --version)
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./artifacts/
 workflows:
   build-deploy:
     jobs:
       - build-windows
       - build-macos
       - build-linux
-
+      - publish-github-release:
+          requires:
+            - build-windows
+            - build-macos
+            - build-linux
+          # filters:
+            # branches:
+              # only:
+                # - master
+            # tags:
+              # only: /^\d+\.\d+\.\d+$/
