@@ -268,7 +268,7 @@ jobs:
           command: |
                 mkdir -p $STAGING_DIR/bin
                 cp src/pink2d.exe $STAGING_DIR/bin
-                cp Pinkcoin-Qt.exe $STAGING_DIR/bin
+                cp release/Pinkcoin-Qt.exe $STAGING_DIR/bin
                 cd /tmp/build
                 tar cvfJ $BUILD_NAME.tar.xz $BUILD_NAME
                 sha256sum $BUILD_NAME.tar.xz >> $BUILD_NAME.tar.xz.sha256
