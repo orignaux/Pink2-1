@@ -29,7 +29,7 @@ jobs:
                     python3 \
                     gettext \
                     g++-mingw-w64-x86-64 mingw-w64-x86-64-dev \
-                    git \
+                    zip git \
                     libdb++-dev libminiupnpc-dev wget ca-certificates \
                     "^libxcb.*" libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxkbcommon-dev libxkbcommon-x11-dev \
                     libxi-dev libxfixes-dev libxext-dev libx11-dev libfreetype6-dev libfontconfig1-dev libxml2-dev libdbus-1-dev \
@@ -269,6 +269,11 @@ jobs:
                 mkdir -p $STAGING_DIR/bin
                 cp src/pink2d.exe $STAGING_DIR/bin
                 cp release/Pinkcoin-Qt.exe $STAGING_DIR/bin
+                cd $STAGING_DIR/bin
+                zip pink2d.exe.zip pink2d.exe
+                rm pink2d.exe
+                zip Pinkcoin-Qt.exe.zip Pinkcoin-Qt.exe
+                rm Pinkcoin-Qt.exe
                 cd /tmp/build
                 tar cvfJ $BUILD_NAME.tar.xz $BUILD_NAME
                 sha256sum $BUILD_NAME.tar.xz >> $BUILD_NAME.tar.xz.sha256
