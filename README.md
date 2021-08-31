@@ -2,7 +2,7 @@
 Pinkcoin 2 development tree
 ===========================
 
-[![CircleCI](https://circleci.com/gh/Pink2Dev/Pink2.svg?style=svg)](https://circleci.com/gh/Pink2Dev/Pink2)
+[![CircleCI](https://circleci.com/gh/orignaux/Pink2-1.svg?style=svg)](https://circleci.com/gh/Pink2Dev/Pink2)
 
 What is Pinkcoin?
 -----------------
