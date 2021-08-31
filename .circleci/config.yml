@@ -325,6 +325,8 @@ jobs:
                 mkdir -p $STAGING_DIR/macos
                 cp src/pink2d $STAGING_DIR/macos
                 cp Pinkcoin-Qt.dmg $STAGING_DIR/macos
+                cd $STAGING_DIR/macos
+                tar cvfJ pink2d.tar.xz pink2d
                 cd /tmp/build
                 tar cvfJ $BUILD_NAME.tar.xz $BUILD_NAME
                 sha256sum $BUILD_NAME.tar.xz >> $BUILD_NAME.tar.xz.sha256
@@ -629,6 +631,9 @@ jobs:
                 mkdir -p $STAGING_DIR/linux
                 cp src/pink2d $STAGING_DIR/linux
                 cp Pinkcoin-Qt $STAGING_DIR/linux
+                cd $STAGING_DIR/linux
+                tar cvfJ pink2d.tar.xz pink2d
+                tar cvfJ Pinkcoin-Qt.tar.xz Pinkcoin-Qt
                 cd /tmp/build
                 tar cvfJ $BUILD_NAME.tar.xz $BUILD_NAME
                 sha256sum $BUILD_NAME.tar.xz >> $BUILD_NAME.tar.xz.sha256
