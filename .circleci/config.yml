@@ -327,6 +327,7 @@ jobs:
                 cp Pinkcoin-Qt.dmg $STAGING_DIR/macos
                 cd $STAGING_DIR/macos
                 tar cvfJ pink2d.tar.xz pink2d
+                rm pink2d
                 cd /tmp/build
                 tar cvfJ $BUILD_NAME.tar.xz $BUILD_NAME
                 sha256sum $BUILD_NAME.tar.xz >> $BUILD_NAME.tar.xz.sha256
@@ -633,37 +634,39 @@ jobs:
                 cp Pinkcoin-Qt $STAGING_DIR/linux
                 cd $STAGING_DIR/linux
                 tar cvfJ pink2d.tar.xz pink2d
+                rm pink2d
                 tar cvfJ Pinkcoin-Qt.tar.xz Pinkcoin-Qt
+                rm Pinkcoin-Qt
                 cd /tmp/build
                 tar cvfJ $BUILD_NAME.tar.xz $BUILD_NAME
                 sha256sum $BUILD_NAME.tar.xz >> $BUILD_NAME.tar.xz.sha256
       - store_artifacts:
           path: /tmp/build/
-  publish-github-release:
-    docker:
-      - image: cibuilds/github:0.10
-    steps:
-      - attach_workspace:
-          at: ./artifacts
-      - run:
-          name: "Publish Release on GitHub"
-          command: |
-            VERSION=$(linux/pink2d --version)
-            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./artifacts/
+  # publish-github-release:
+  #   docker:
+  #     - image: cibuilds/github:0.10
+  #   steps:
+  #     - attach_workspace:
+  #         at: ./artifacts
+  #     - run:
+  #         name: "Publish Release on GitHub"
+  #         command: |
+  #           VERSION=$(linux/pink2d --version)
+  #           ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./artifacts/
 workflows:
   build-deploy:
     jobs:
       - build-windows
       - build-macos
       - build-linux
-      - publish-github-release:
-          requires:
-            - build-windows
-            - build-macos
-            - build-linux
-          # filters:
-            # branches:
-              # only:
-                # - master
-            # tags:
-              # only: /^\d+\.\d+\.\d+$/
+      # - publish-github-release:
+      #     requires:
+      #       - build-windows
+      #       - build-macos
+      #       - build-linux
+      #     filters:
+      #       branches:
+      #         only:
+      #           - master
+      #       tags:
+      #         only: /^\d+\.\d+\.\d+$/
