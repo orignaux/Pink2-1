@@ -4,7 +4,13 @@ jobs:
   build-arm:
     working_directory: /Pink2
     machine:
-      - image: ubuntu-2004:202101-01
+      image: ubuntu-2004:202101-01
+    environment:
+      FROM_BUILD: "Pink2"
+      HOST: "aarch64-linux-gnu"
+      HOST_CFLAGS: "-O2 -pipe"
+      HOST_CXXFLAGS: "-O2 -pipe"
+      DEPS_PREFIX: "/opt/aarch64-linux-gnu"
     resource_class: arm.medium
     steps:
       - checkout
