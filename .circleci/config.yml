@@ -144,7 +144,7 @@ jobs:
                 CXXFLAGS=$pkg_cxxflags \
                 ./Configure \
                     --prefix=$DEPS_PREFIX \
-                    linux-aarch86 \
+                    linux-aarch64 \
                     no-camellia \
                     no-capieng \
                     no-cast \
