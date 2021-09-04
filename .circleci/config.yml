@@ -17,10 +17,10 @@ jobs:
       - run:
           name: Install toolset
           command: |
-                echo APT::Install-Recommends "0"; >> /etc/apt/apt.conf &&
-                echo APT::Install-Suggests "0"; >> /etc/apt/apt.conf &&
-                apt-get update
-                apt-get install -y \
+                sudo echo APT::Install-Recommends "0"; >> /etc/apt/apt.conf &&
+                sudo echo APT::Install-Suggests "0"; >> /etc/apt/apt.conf &&
+                sudo apt-get update
+                sudo apt-get install -y \
                     --no-install-recommends \
                     autoconf \
                     build-essential \
