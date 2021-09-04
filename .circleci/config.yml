@@ -195,7 +195,7 @@ jobs:
                 CFLAGS=$pkg_cflags \
                 CXXFLAGS=$pkg_cxxflags \
                 LDFLAGS=$pkg_ldflags \
-                make -j 2 -f makefile.pi STATIC=1 USE_UPNP=0
+                make -j 2 -f makefile.pi STATIC=1 USE_UPNP=0 -I obj/
                 strip pink2d
       - run:
           name: Set Artifact name as env
