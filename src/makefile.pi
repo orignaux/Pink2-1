@@ -173,7 +173,7 @@ obj/%.o: %.cpp
 	rm -f $(@:%.o=%.d)
 
 pink2d: $(OBJS:obj/%=obj/%)
-	$(CXX) $(xCXXFLAGS) -o $@ $(LIBPATHS) $^ $(xLDFLAGS) $(LIBS)
+	$(CXX) $(xCXXFLAGS) -o $@ $(LIBPATHS) $^ $(xLDFLAGS) $(LIBS) -I obj
 	$(STRIP) pink2d
 
 clean:

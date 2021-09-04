@@ -177,6 +177,14 @@ jobs:
           paths:
             - $DEPS_PREFIX
       - run:
+          name: Build - leveldb
+          command: |
+                cd src/leveldb
+                TARGET_OS=Linux CROSS_COMPILE=true \
+                CXXFLAGS="-fstack-protector-all -Wstack-protector" \
+                make libleveldb.a libmemenv.a
+                cd ../../
+      - run:
           name: Build - Pinkcoin daemon (pink2d) [static]
           command: |
                 pkg=pink2d
