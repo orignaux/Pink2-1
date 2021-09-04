@@ -120,7 +120,7 @@ jobs:
                 CFLAGS=$pkg_cflags \
                 CXXFLAGS=$pkg_cxxflags \
                 make libminiupnpc.a
-                mkdir -p $DEPS_PREFIX/include/$pkg
+                sudo mkdir -p $DEPS_PREFIX/include/$pkg
                 sudo install *.h $DEPS_PREFIX/include/miniupnpc
                 sudo install libminiupnpc.a $DEPS_PREFIX/lib
       - run:
