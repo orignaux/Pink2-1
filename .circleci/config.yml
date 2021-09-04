@@ -206,7 +206,7 @@ jobs:
                 sudo rm pink2d
                 cd /tmp/build
                 sudo tar cvfJ $BUILD_NAME.tar.xz $BUILD_NAME
-                sudo sha256sum $BUILD_NAME.tar.xz >> $BUILD_NAME.tar.xz.sha256
+                # sudo sha256sum $BUILD_NAME.tar.xz >> $BUILD_NAME.tar.xz.sha256
       - store_artifacts:
           path: /tmp/build/
   # build-windows:
