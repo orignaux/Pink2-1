@@ -31,7 +31,7 @@ jobs:
                     pkg-config \
                     wget \
                     ca-certificates
-                    mkdir -p $DEPS_PREFIX
+                    sudo mkdir -p $DEPS_PREFIX
       - restore_cache:
           key: toolkit-cache-arm-linux-V1-{{ .Branch }}
       - run:
@@ -59,7 +59,7 @@ jobs:
                     --prefix=$DEPS_PREFIX \
                     --static
                 make libz.a
-                make install
+                sudo make install
 
       - run:
           name: Build - db-4.8.30.NC [static]
@@ -90,7 +90,7 @@ jobs:
                     --disable-replication \
                     --disable-shared \
                     --with-pic
-                make install
+                sudo make install
       - run:
           name: Build - miniupnpc-2.0.20180203 [static]
           command: |
@@ -115,8 +115,8 @@ jobs:
                 CXXFLAGS=$pkg_cxxflags \
                 make libminiupnpc.a
                 mkdir -p $DEPS_PREFIX/include/$pkg
-                install *.h $DEPS_PREFIX/include/miniupnpc
-                install libminiupnpc.a $DEPS_PREFIX/lib
+                sudo install *.h $DEPS_PREFIX/include/miniupnpc
+                sudo install libminiupnpc.a $DEPS_PREFIX/lib
       - run:
           name: Build - openssl-1.1.1k [static]
           command: |
@@ -165,7 +165,7 @@ jobs:
                     no-zlib \
                     no-zlib-dynamic
                 make depend
-                make install
+                sudo make install
       - save_cache:
           key: toolkit-cache-arm-linux-V1-{{ .Branch }}
           paths:
@@ -193,14 +193,14 @@ jobs:
       - run:
           name: Stage artifacts
           command: |
-                mkdir -p $STAGING_DIR/linux
-                cp src/pink2d $STAGING_DIR/linux
+                sudo mkdir -p $STAGING_DIR/linux
+                sudo cp src/pink2d $STAGING_DIR/linux
                 cd $STAGING_DIR/linux
-                tar cvfJ pink2d.tar.xz pink2d
-                rm pink2d
+                sudo tar cvfJ pink2d.tar.xz pink2d
+                sudo rm pink2d
                 cd /tmp/build
-                tar cvfJ $BUILD_NAME.tar.xz $BUILD_NAME
-                sha256sum $BUILD_NAME.tar.xz >> $BUILD_NAME.tar.xz.sha256
+                sudo tar cvfJ $BUILD_NAME.tar.xz $BUILD_NAME
+                sudo sha256sum $BUILD_NAME.tar.xz >> $BUILD_NAME.tar.xz.sha256
       - store_artifacts:
           path: /tmp/build/
   # build-windows:
