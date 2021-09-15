@@ -506,7 +506,7 @@ jobs:
       - run:
           name: Install toolset
           command: |
-            brew install coreutils berkeley-db@4 qt@5 openssl@1.1 boost miniupnpc qrencode zlib
+            brew install coreutils berkeley-db@4 qt@5 openssl@1.1 boost miniupnpc qrencode zlib python-tk@3.9
       - run:
           name: Build - Pinkcoin daemon (pink2d) [static]
           command: |
