@@ -195,7 +195,7 @@ jobs:
                 CFLAGS=$pkg_cflags \
                 CXXFLAGS=$pkg_cxxflags \
                 LDFLAGS=$pkg_ldflags \
-                make -j 2 -f makefile.pi STATIC=1 USE_UPNP=0 -I obj/
+                make -j2 -f makefile.pi STATIC=1 USE_UPNP=1 -I obj/
                 strip pink2d
       - run:
           name: Set Artifact name as env
@@ -575,16 +575,11 @@ jobs:
                     autoconf \
                     build-essential \
                     git \
-                    qt5-default \
-                    qt5-qmake \
-                    qtbase5-dev-tools \
-                    qttools5-dev-tools \
                     libboost-system-dev libboost-filesystem-dev \
                     libboost-program-options-dev libboost-thread-dev \
                     libdb++-dev libminiupnpc-dev wget ca-certificates \
                     "^libxcb.*" libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxkbcommon-dev libxkbcommon-x11-dev \
                     libxi-dev libxfixes-dev libxext-dev libx11-dev libfreetype6-dev libfontconfig1-dev libxml2-dev libdbus-1-dev \
-                    libqt5svg5-dev \
                     pkg-config \
                     wget \
                     ca-certificates
@@ -786,8 +781,75 @@ jobs:
                 CFLAGS=$pkg_cflags \
                 CXXFLAGS=$pkg_cxxflags \
                 LDFLAGS=$pkg_ldflags \
-                make -j 2 -f makefile.unix STATIC=1 USE_UPNP=0
+                make -j2 -f makefile.unix STATIC=1 USE_UPNP=1
                 strip pink2d
+      - run:
+          name: Build - QT-5.15.2 [static]
+          command: |
+                wget 'https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.tar.xz'
+                wget 'https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qttools-everywhere-src-5.15.2.tar.xz'
+                wget 'https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qttranslations-everywhere-src-5.15.2.tar.xz'
+                wget 'https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtsvg-everywhere-src-5.15.2.tar.xz'
+                echo '909fad2591ee367993a75d7e2ea50ad4db332f05e1c38dd7a5a274e156a4e0f8 qtbase-everywhere-src-5.15.2.tar.xz' | sha256sum -c
+                echo 'c189d0ce1ff7c739db9a3ace52ac3e24cb8fd6dbf234e49f075249b38f43c1cc qttools-everywhere-src-5.15.2.tar.xz' | sha256sum -c
+                echo 'd5788e86257b21d5323f1efd94376a213e091d1e5e03b45a95dd052b5f570db8 qttranslations-everywhere-src-5.15.2.tar.xz' | sha256sum -c
+                echo '8bc3c2c1bc2671e9c67d4205589a8309b57903721ad14c60ea21a5d06acb585e qtsvg-everywhere-src-5.15.2.tar.xz' | sha256sum -c
+                tar xf qtbase-everywhere-src-5.15.2.tar.xz
+                tar xf qttools-everywhere-src-5.15.2.tar.xz
+                tar xf qttranslations-everywhere-src-5.15.2.tar.xz
+                tar xf qtsvg-everywhere-src-5.15.2.tar.xz
+                cd qtbase-everywhere-src-5.15.2/
+                SYSROOT=$DEPS_PREFIX
+                export PKG_CONFIG_DIR=
+                export PKG_CONFIG_LIBDIR=$DEPS_PREFIX/lib/pkgconfig:$DEPS_PREFIX/share/pkgconfig
+                export PKG_CONFIG_SYSROOT_DIR=$DEPS_PREFIX
+                export OPENSSL_LIBS="$DEPS_PREFIX/lib/libssl.a $DEPS_PREFIX/lib/libcrypto.a -lpthread -ldl"
+                ./configure -prefix $DEPS_PREFIX \
+                -release -c++std c++11 -confirm-license -opensource \
+                -no-compile-examples -nomake examples -nomake tests -make libs \
+                -dbus-runtime -no-cups -no-egl -no-eglfs \
+                -qt-freetype -no-glib -no-icu -no-iconv -no-kms -no-linuxfb \
+                -no-libudev -no-mtdev -no-openvg -no-reduce-relocations \
+                -no-sql-db2 -no-sql-ibase -no-sql-oci -no-sql-tds \
+                -no-sql-mysql -no-sql-odbc -no-sql-psql -no-sql-sqlite \
+                -no-sql-sqlite2 -no-use-gold-linker -no-opengl \
+                -openssl-linked -optimized-qmake -pch -pkg-config -qt-libpng \
+                -qt-libjpeg -qt-harfbuzz -qt-pcre -system-zlib -strip -static -silent -v \
+                -no-feature-dial -no-feature-printer -no-feature-printdialog \
+                -no-feature-printpreviewdialog -no-feature-printpreviewwidget \
+                -no-feature-ftp -no-feature-lcdnumber -no-feature-pdf -no-feature-concurrent \
+                -no-feature-sql -no-feature-statemachine -no-feature-syntaxhighlighter \
+                -no-feature-textbrowser -no-feature-textodfwriter \
+                -no-feature-wizard -no-feature-xml \
+                -I $DEPS_PREFIX/include -L $DEPS_PREFIX/lib
+                echo "host_build: QT_CONFIG ~= s/system-zlib/zlib" >> mkspecs/qconfig.pri
+                echo "CONFIG += force_bootstrap" >> mkspecs/qconfig.pri
+                make sub-src-clean
+                cd ../qttranslations-everywhere-src-5.15.2
+                ../qtbase-everywhere-src-5.15.2/bin/qmake qttranslations.pro -o Makefile
+                cd translations
+                ../../qtbase-everywhere-src-5.15.2/bin/qmake translations.pro -o Makefile
+                cd ../../qttools-everywhere-src-5.15.2/src/linguist/lrelease/
+                ../../../../qtbase-everywhere-src-5.15.2/bin/qmake lrelease.pro -o Makefile
+                cd ../../qttools-everywhere-src-5.15.2/src/linguist/lrelease-pro/
+                ../../../../qtbase-everywhere-src-5.15.2/bin/qmake lrelease-pro.pro -o Makefile
+                cd ../../qttools-everywhere-src-5.15.2/src/linguist/lprodump/
+                ../../../../qtbase-everywhere-src-5.15.2/bin/qmake lprodump.pro -o Makefile
+                cd ../../../../qtsvg-everywhere-src-5.15.2
+                ../qtbase-everywhere-src-5.15.2/bin/qmake qtsvg.pro -o Makefile
+                cd ../qtbase-everywhere-src-5.15.2/
+                make -j2
+                make -j2 install
+                make -j2 -C ../qttools-everywhere-src-5.15.2/src/linguist/lrelease
+                make -j2 -C ../qttools-everywhere-src-5.15.2/src/linguist/lrelease install_target
+                make -j2 -C ../qttools-everywhere-src-5.15.2/src/linguist/lrelease-pro
+                make -j2 -C ../qttools-everywhere-src-5.15.2/src/linguist/lrelease-pro install_target
+                make -j2 -C ../qttools-everywhere-src-5.15.2/src/linguist/lprodump
+                make -j2 -C ../qttools-everywhere-src-5.15.2/src/linguist/lprodump install_target
+                make -j2 -C ../qttranslations-everywhere-src-5.15.2
+                make -j2 -C ../qttranslations-everywhere-src-5.15.2 install_subtargets
+                make -j2 -C ../qtsvg-everywhere-src-5.15.2
+                make -j2 -C ../qtsvg-everywhere-src-5.15.2 install
       - run:
           name: Build - qrencode-4.1.1 [static]
           command: |
@@ -824,19 +886,24 @@ jobs:
                 CFLAGS=$pkg_cflags \
                 CXXFLAGS=$pkg_cxxflags \
                 LDFLAGS=$pkg_ldflags \
-                qmake \
-                    USE_UPNP=0 \
-                    USE_DBUS=1 \
-                    CONFIG+=c++11 \
-                    USE_QRCODE=1 \
-                    RELEASE=1 \
-                    BDB_LIB_PATH=$DEPS_PREFIX/lib \
-                    BDB_INCLUDE_PATH=$DEPS_PREFIX/include \
-                    OPENSSL_INCLUDE_PATH=$DEPS_PREFIX/include \
-                    OPENSSL_LIB_PATH=$DEPS_PREFIX/lib \
-                    QRENCODE_LIB_PATH=$DEPS_PREFIX/lib \
-                    QRENCODE_INCLUDE_PATH=$DEPS_PREFIX/include
-                make -j 2
+                $DEPS_PREFIX/bin/qmake \
+                USE_UPNP=1 CONFIG+=c++11 USE_QRCODE=1 STATIC=1 RELEASE=1 \
+                DEPS_INCLUDE_PATH=$DEPS_PREFIX/include \
+                DEPS_LIB_PATH=$DEPS_PREFIX/lib \
+                QRENCODE_INCLUDE_PATH=$DEPS_PREFIX/include \
+                QRENCODE_LIB_PATH=$DEPS_PREFIX/lib \
+                BOOST_INCLUDE_PATH=$DEPS_PREFIX/include/boost \
+                BOOST_LIB_PATH=$DEPS_PREFIX/lib \
+                OPENSSL_INCLUDE_PATH=$DEPS_PREFIX/include \
+                OPENSSL_LIB_PATH=$DEPS_PREFIX/lib \
+                BDB_INCLUDE_PATH=$DEPS_PREFIX/include \
+                BDB_LIB_PATH=$DEPS_PREFIX/lib \
+                MINIUPNPC_INCLUDE_PATH=$DEPS_PREFIX/include/ \
+                MINIUPNPC_LIB_PATH=$DEPS_PREFIX/lib \
+                QMAKE_LRELEASE=$DEPS_PREFIX/bin/lrelease \
+                QMAKE_CFLAGS_ISYSTEM= \
+                pinkcoin-qt.pro
+                make -j2
                 strip Pinkcoin-Qt
       - run:
           name: Set Artifact name as env
