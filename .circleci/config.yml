@@ -943,9 +943,9 @@ workflows:
   build-deploy:
     jobs:
       # - build-arm
-      - build-windows
+      # - build-windows
       - build-macos
-      - build-linux
+      # - build-linux
       # - publish-github-release:
       #     requires:
       #       - build-windows
