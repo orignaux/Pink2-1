@@ -94,7 +94,7 @@ OBJS= \
     obj/rpcrawtransaction.o \
     obj/rpcsmessage.o \
     obj/script.o \
-    obj/stakedb.o \
+	obj/stakedb.o \
     obj/sync.o \
     obj/util.o \
     obj/wallet.o \
@@ -109,14 +109,14 @@ OBJS= \
     obj/stealth.o 
 
 ifndef USE_UPNP
-    override USE_UPNP = -
+	override USE_UPNP = -
 endif
 ifneq (${USE_UPNP}, -)
-    DEFS += -DUSE_UPNP=$(USE_UPNP)
+	DEFS += -DUSE_UPNP=$(USE_UPNP)
 ifdef STATIC
-    LIBS += $(DEPSDIR)/miniupnpc/lib/libminiupnpc.a
+	LIBS += $(DEPSDIR)/miniupnpc/lib/libminiupnpc.a
 else
-    LIBS += -lminiupnpc
+	LIBS += -lminiupnpc
 endif
 endif
 
@@ -127,37 +127,37 @@ DEFS += $(addprefix -I,$(CURDIR)/leveldb/include)
 DEFS += $(addprefix -I,$(CURDIR)/leveldb/helpers)
 OBJS += obj/txdb-leveldb.o
 leveldb/libleveldb.a:
-    @echo "Building LevelDB ..." && cd leveldb && $(MAKE) CC=$(CC) CXX=$(CXX) OPT="$(CFLAGS)" libleveldb.a libmemenv.a && cd ..
+	@echo "Building LevelDB ..." && cd leveldb && $(MAKE) CC=$(CC) CXX=$(CXX) OPT="$(CFLAGS)" libleveldb.a libmemenv.a && cd ..
 obj/txdb-leveldb.o: leveldb/libleveldb.a
 
 # auto-generated dependencies:
 -include obj/*.P
 
 obj/build.h: FORCE
-    /bin/sh ../share/genbuild.sh obj/build.h
+	/bin/sh ../share/genbuild.sh obj/build.h
 version.cpp: obj/build.h
 DEFS += -DHAVE_BUILD_INFO
 
 obj/%.o: %.cpp
-    $(CXX) -c $(CFLAGS) -MMD -MF $(@:%.o=%.d) -Wc++11-extensions -fvisibility=hidden -fvisibility-inlines-hidden -o $@ $<
-    @cp $(@:%.o=%.d) $(@:%.o=%.P); \
-      sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
-          -e '/^$$/ d' -e 's/$$/ :/' < $(@:%.o=%.d) >> $(@:%.o=%.P); \
-      rm -f $(@:%.o=%.d)
+	$(CXX) -c $(CFLAGS) -MMD -MF $(@:%.o=%.d) -Wc++11-extensions -fvisibility=hidden -fvisibility-inlines-hidden -o $@ $<
+	@cp $(@:%.o=%.d) $(@:%.o=%.P); \
+	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
+	      -e '/^$$/ d' -e 's/$$/ :/' < $(@:%.o=%.d) >> $(@:%.o=%.P); \
+	  rm -f $(@:%.o=%.d)
 
 obj/scrypt-x86.o: scrypt-x86.S
-    $(CXX) -c $(xCXXFLAGS) -MMD -o $@ $<
+	$(CXX) -c $(xCXXFLAGS) -MMD -o $@ $<
 
 obj/scrypt-x86_64.o: scrypt-x86_64.S
-    $(CXX) -c $(xCXXFLAGS) -MMD -o $@ $<
+	$(CXX) -c $(xCXXFLAGS) -MMD -o $@ $<
 
 pink2d: $(OBJS:obj/%=obj/%)
-    $(CXX) $(CFLAGS) -Wc++11-extensions -fvisibility=hidden -fvisibility-inlines-hidden -o $@ $(LIBPATHS) $^ $(LIBS)
+	$(CXX) $(CFLAGS) -Wc++11-extensions -fvisibility=hidden -fvisibility-inlines-hidden -o $@ $(LIBPATHS) $^ $(LIBS)
 
 clean:
-    -rm -f pink2d
-    -rm -f obj/*.o
-    -rm -f obj/*.P
-    -rm -f obj/build.h
+	-rm -f pink2d
+	-rm -f obj/*.o
+	-rm -f obj/*.P
+	-rm -f obj/build.h
 
 FORCE:

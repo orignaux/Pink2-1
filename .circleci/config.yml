@@ -514,6 +514,12 @@ jobs:
             make -j2 -f makefile.osx STATIC=1 USE_UPNP=1
             strip pink2d
       - run:
+          name: Build - Pinkcoin daemon (pink2d) [static]
+          command: |
+            cd src
+            make -j2 -f makefile.osx STATIC=1 USE_UPNP=1
+            strip pink2d
+      - run:
           name: Build - Pinkcoin Qt (pinkcoin-qt)
           command: |
             /usr/local/opt/qt@5/bin/qmake \
