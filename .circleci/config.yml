@@ -585,7 +585,7 @@ jobs:
                     ca-certificates
                     mkdir -p $DEPS_PREFIX
       - restore_cache:
-          key: toolkit-cache-linux-V1-{{ .Branch }}
+          key: toolkit-cache-linux-V2-{{ .Branch }}
       - run:
           name: Build - zlib-1.2.11 [static]
           command: |
@@ -766,26 +766,10 @@ jobs:
                     no-zlib-dynamic
                 make depend
                 make install
-      - save_cache:
-          key: toolkit-cache-linux-V1-{{ .Branch }}
-          paths:
-            - $DEPS_PREFIX
-      - run:
-          name: Build - Pinkcoin daemon (pink2d) [static]
-          command: |
-                pkg=pink2d
-                pkg_cflags="$HOST_CFLAGS -I$DEPS_PREFIX/include"
-                pkg_cxxflags=$pkg_cflags
-                pkg_ldflags="-L$DEPS_PREFIX/lib"
-                cd src
-                CFLAGS=$pkg_cflags \
-                CXXFLAGS=$pkg_cxxflags \
-                LDFLAGS=$pkg_ldflags \
-                make -j2 -f makefile.unix STATIC=1 USE_UPNP=1
-                strip pink2d
       - run:
           name: Build - QT-5.15.2 [static]
           command: |
+                cd src
                 wget 'https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qtbase-everywhere-src-5.15.2.tar.xz'
                 wget 'https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qttools-everywhere-src-5.15.2.tar.xz'
                 wget 'https://download.qt.io/official_releases/qt/5.15/5.15.2/submodules/qttranslations-everywhere-src-5.15.2.tar.xz'
@@ -831,15 +815,16 @@ jobs:
                 ../../qtbase-everywhere-src-5.15.2/bin/qmake translations.pro -o Makefile
                 cd ../../qttools-everywhere-src-5.15.2/src/linguist/lrelease/
                 ../../../../qtbase-everywhere-src-5.15.2/bin/qmake lrelease.pro -o Makefile
-                cd ../../qttools-everywhere-src-5.15.2/src/linguist/lrelease-pro/
+                cd ../lrelease-pro/
                 ../../../../qtbase-everywhere-src-5.15.2/bin/qmake lrelease-pro.pro -o Makefile
-                cd ../../qttools-everywhere-src-5.15.2/src/linguist/lprodump/
-                ../../../../qtbase-everywhere-src-5.15.2/bin/qmake lprodump.pro -o Makefile
                 cd ../../../../qtsvg-everywhere-src-5.15.2
                 ../qtbase-everywhere-src-5.15.2/bin/qmake qtsvg.pro -o Makefile
                 cd ../qtbase-everywhere-src-5.15.2/
                 make -j2
                 make -j2 install
+                cd ../qttools-everywhere-src-5.15.2/src/linguist/lprodump/
+                ../../../../qtbase-everywhere-src-5.15.2/bin/qmake lprodump.pro -o Makefile
+                cd ../../../../qtbase-everywhere-src-5.15.2/
                 make -j2 -C ../qttools-everywhere-src-5.15.2/src/linguist/lrelease
                 make -j2 -C ../qttools-everywhere-src-5.15.2/src/linguist/lrelease install_target
                 make -j2 -C ../qttools-everywhere-src-5.15.2/src/linguist/lrelease-pro
@@ -876,6 +861,23 @@ jobs:
                     --with-pic \
                     --without-tools
                 make install
+      - save_cache:
+          key: toolkit-cache-linux-V2-{{ .Branch }}
+          paths:
+            - $DEPS_PREFIX
+      - run:
+          name: Build - Pinkcoin daemon (pink2d) [static]
+          command: |
+                pkg=pink2d
+                pkg_cflags="$HOST_CFLAGS -I$DEPS_PREFIX/include"
+                pkg_cxxflags=$pkg_cflags
+                pkg_ldflags="-L$DEPS_PREFIX/lib"
+                cd src
+                CFLAGS=$pkg_cflags \
+                CXXFLAGS=$pkg_cxxflags \
+                LDFLAGS=$pkg_ldflags \
+                make -j2 -f makefile.unix STATIC=1 USE_UPNP=1
+                strip pink2d
       - run:
           name: Build - Pinkcoin Qt (pinkcoin-qt)
           command: |
